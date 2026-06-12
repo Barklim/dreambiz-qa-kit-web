@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DreamBiz QA Report — Query #1 Dubai — 2026-06-12 (repeat)</title>
+  <style>
+    :root {
+      --bg: #0f1117; --surface: #1a1d27; --border: #2a2f3d;
+      --text: #e8eaed; --muted: #9aa0a6; --accent: #5b9fd4;
+      --green: #4caf82; --yellow: #d4a84b; --red: #e05c5c; --orange: #e08a4b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6;
+      padding: 2rem; max-width: 960px; margin: 0 auto;
+    }
+    h1 { font-size: 1.75rem; margin-bottom: 0.25rem; }
+    h2 { font-size: 1.25rem; margin: 2rem 0 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    h3 { font-size: 1rem; margin: 1.25rem 0 0.5rem; color: var(--muted); }
+    p, li { color: var(--muted); font-size: 0.9rem; }
+    li { margin: 0.25rem 0 0.25rem 1.25rem; }
+    .meta { font-size: 0.85rem; color: var(--muted); margin-bottom: 2rem; }
+    .verdict {
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 4px solid var(--orange); padding: 1.25rem; border-radius: 8px; margin: 1.5rem 0;
+    }
+    .delta {
+      background: var(--surface); border: 1px solid var(--accent);
+      border-left: 4px solid var(--accent); padding: 1.25rem; border-radius: 8px; margin: 1.5rem 0;
+    }
+    .score-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem; margin: 1rem 0;
+    }
+    .score-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1rem; text-align: center;
+    }
+    .score-card .value { font-size: 1.75rem; font-weight: 700; color: var(--text); }
+    .score-card .label { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+    .score-card .delta-up { font-size: 0.7rem; color: var(--green); }
+    .score-card.warn .value { color: var(--yellow); }
+    .score-card.bad .value { color: var(--red); }
+    .score-card.skip .value { color: var(--muted); font-size: 1rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 0.75rem 0; }
+    th, td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    th { background: var(--surface); color: var(--text); }
+    td { color: var(--muted); }
+    .sev-critical { color: var(--red); font-weight: 600; }
+    .sev-high { color: var(--orange); font-weight: 600; }
+    .sev-medium { color: var(--yellow); }
+    .sev-low { color: var(--muted); }
+    .sev-fixed { color: var(--green); font-weight: 600; }
+    .pass { color: var(--green); }
+    .fail { color: var(--red); }
+    .partial { color: var(--yellow); }
+    .improved { color: var(--green); }
+    .unchanged { color: var(--muted); }
+    footer { margin-top: 3rem; font-size: 0.75rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 1rem; }
+  </style>
+</head>
+<body>
+
+<h1>DreamBiz QA Report (updated)</h1>
+<p class="meta">
+  Query #1 (Dubai) · Repeat run #2 · 2026-06-12 ·
+  GCC Wellness & Education Growth Agency ·
+  <strong>Delta:</strong> Idea Card retention metrics only (LTV / LTV:CAC / Churn → —)
+</p>
+
+<div class="verdict">
+  <strong>Overall score: 50% — Weak</strong> <span class="improved">(+2 pp vs 2026-06-11)</span>
+  <p style="margin-top:0.5rem">
+    Production readiness: <strong style="color:var(--red)">No</strong>.
+    Idea Card no longer shows misleading zeros — retention block now displays <strong>—</strong>.
+    Business Plan unchanged; core blockers remain.
+  </p>
+</div>
+
+<div class="delta">
+  <strong>What changed since 2026-06-11</strong>
+  <table style="margin-top:0.75rem">
+    <tr><th>Metric (Idea Card)</th><th>Before (06-11)</th><th>After (06-12)</th><th>QA impact</th></tr>
+    <tr><td>LTV:CAC</td><td class="fail">0:1</td><td class="partial">—</td><td class="improved">No longer asserts false ratio</td></tr>
+    <tr><td>Retention LTV</td><td class="fail">$0</td><td class="partial">—</td><td class="improved">No longer shows broken $0</td></tr>
+    <tr><td>Churn</td><td class="fail">0%/mo</td><td class="partial">—</td><td class="improved">No longer claims unrealistic 0%</td></tr>
+    <tr><td>Financial score</td><td class="unchanged">72</td><td class="unchanged">72</td><td>Unchanged</td></tr>
+    <tr><td>CAC / Gross margin</td><td class="unchanged">$200 / 75%</td><td class="unchanged">$200 / 75%</td><td>Unchanged</td></tr>
+    <tr><td>Business Plan</td><td colspan="2" class="unchanged">No changes observed</td><td>Score stays 51%</td></tr>
+  </table>
+</div>
+
+<div class="score-grid">
+  <div class="score-card warn"><div class="value">67%</div><div class="label">Idea Card</div><div class="delta-up">+5 pp</div></div>
+  <div class="score-card bad"><div class="value">51%</div><div class="label">Business Plan</div><div class="delta-up">unchanged</div></div>
+  <div class="score-card skip"><div class="value">N/A</div><div class="label">Presentation</div></div>
+  <div class="score-card bad"><div class="value">1/5</div><div class="label">Consistency tests</div></div>
+  <div class="score-card bad"><div class="value">12</div><div class="label">Open bugs</div><div class="delta-up">1 fixed</div></div>
+</div>
+
+<h2>1. Executive Summary</h2>
+<p>
+  Repeat run confirms a <strong>targeted UI fix</strong> on Idea Card: retention-related metrics that previously
+  displayed broken values (LTV $0, LTV:CAC 0:1, Churn 0%) now show <strong>—</strong> (null / not calculated).
+  This is a meaningful improvement: the product stops presenting false numbers as facts.
+</p>
+<p style="margin-top:0.5rem">
+  However, retention is still <strong>not modeled</strong> for contractor/retainer agency archetype.
+  CAC $200, hourly $100 model, and all BP financial bugs remain. Presentation still not tested.
+</p>
+
+<h3>Score delta vs 2026-06-11</h3>
+<table>
+  <tr><th>Component</th><th>06-11</th><th>06-12</th><th>Δ</th></tr>
+  <tr><td>Idea Card</td><td>62%</td><td>67%</td><td class="improved">+5</td></tr>
+  <tr><td>Business Plan</td><td>51%</td><td>51%</td><td class="unchanged">0</td></tr>
+  <tr><td>Cross-stage penalty</td><td>−9%</td><td>−9%</td><td class="unchanged">0</td></tr>
+  <tr><td><strong>Overall</strong></td><td><strong>48%</strong></td><td><strong>50%</strong></td><td class="improved"><strong>+2</strong></td></tr>
+</table>
+
+<h2>2. Idea Card — updated assessment (67%)</h2>
+
+<h3>Why +5 pp</h3>
+<ul>
+  <li>Penalty reduced: <strong>−10 → −5</strong> (was «нереалистичные цифры»; now «retention не смоделирован»)</li>
+  <li>Red flag «фантазийные нули как факт» — <strong>снят</strong> для LTV / LTV:CAC / Churn</li>
+  <li>Completeness criterion stays 3/5 — metrics visible but empty</li>
+</ul>
+
+<h3>Unit economics (06-12)</h3>
+<table>
+  <tr><th>Metric</th><th>Value</th><th>Verdict</th></tr>
+  <tr><td>LTV:CAC</td><td>—</td><td class="partial">Not calculated (was 0:1 — fixed display)</td></tr>
+  <tr><td>Retention LTV</td><td>—</td><td class="partial">Not calculated (was $0 — fixed display)</td></tr>
+  <tr><td>Churn</td><td>—</td><td class="partial">Not modeled (was 0% — fixed display)</td></tr>
+  <tr><td>CAC</td><td>$200</td><td class="fail">Still suspicious for B2B Dubai</td></tr>
+  <tr><td>Model</td><td>$100/hr contractor</td><td class="fail">Still ≠ retainer AED from chat</td></tr>
+  <tr><td>Breakeven</td><td>6 mo · 14 clients · $23K</td><td class="pass">OK</td></tr>
+  <tr><td>Gross margin</td><td>75%</td><td class="partial">Unchanged</td></tr>
+</table>
+
+<h3>Remaining Idea Card issues</h3>
+<ul>
+  <li>Retention block empty — contractor/retainer model still not supported end-to-end (C-05 partial)</li>
+  <li>Financial section score 72 despite LTV:CAC —</li>
+  <li>Text still claims «attractive payback» while retention metrics absent</li>
+</ul>
+
+<h2>3. Business Plan — unchanged (51%)</h2>
+<p>All findings from 2026-06-11 report still apply. Consistency tests: <strong>1/5 pass</strong>.</p>
+<ul>
+  <li>Y2–Y5 cash flow = $0</li>
+  <li>36 clients vs 640h capacity</li>
+  <li>BP still shows Churn 5%, LTV $1,500–2,000 — IC shows —</li>
+</ul>
+
+<h2>4. Cross-stage consistency (updated)</h2>
+<table>
+  <tr><th>Parameter</th><th>06-11</th><th>06-12</th></tr>
+  <tr><td>LTV / CAC</td><td class="fail">IC $0 vs BP $1.5–2K</td><td class="partial">IC — vs BP $1.5–2K (honest gap, still mismatch)</td></tr>
+  <tr><td>Churn</td><td class="fail">IC 0% vs BP 5%</td><td class="partial">IC — vs BP 5% (no false zero on IC)</td></tr>
+  <tr><td>Revenue model</td><td class="fail">retainer vs hourly</td><td class="fail">unchanged</td></tr>
+</table>
+<p>Discrepancies: <strong>3</strong> → penalty <strong>−9 pp</strong> (unchanged — BP still fills metrics IC omits)</p>
+
+<h2>5. Bug registry — delta</h2>
+<table>
+  <tr><th>#</th><th>Bug</th><th>06-11</th><th>06-12</th><th>Known ID</th></tr>
+  <tr>
+    <td>1</td>
+    <td>LTV $0 / LTV:CAC 0:1 on Idea Card</td>
+    <td class="sev-critical">Critical</td>
+    <td class="sev-fixed">Partially fixed → —</td>
+    <td>H-01</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>Churn IC vs BP</td>
+    <td class="sev-high">High (0% vs 5%)</td>
+    <td class="sev-medium">Medium (— vs 5%)</td>
+    <td>H-01</td>
+  </tr>
+  <tr><td>2–4, 6–13</td><td>All other bugs</td><td colspan="2" class="unchanged">Unchanged / still open</td><td>—</td></tr>
+</table>
+<p><strong>Open bugs: 12</strong> (1 partially fixed, 1 downgraded)</p>
+
+<h2>6. Regression verdict</h2>
+<table>
+  <tr><th>Area</th><th>Trend</th></tr>
+  <tr><td>Idea Card retention display</td><td class="improved">Improvement — no false zeros</td></tr>
+  <tr><td>Idea Card retention modeling</td><td class="unchanged">Still missing</td></tr>
+  <tr><td>Business Plan</td><td class="unchanged">No change</td></tr>
+  <tr><td>Overall production readiness</td><td class="unchanged">No — blockers remain</td></tr>
+</table>
+
+<h2>7. Recommendations (priority unchanged)</h2>
+<ol>
+  <li><strong>Next:</strong> Implement real LTV/CAC/churn for contractor/retainer — not just hide broken values</li>
+  <li>Sync chat retainer archetype with financial engine</li>
+  <li>Fix BP multi-year cash flow</li>
+  <li>Align IC retention — with BP churn 5% when modeled</li>
+  <li>Test Presentation when available</li>
+</ol>
+
+<h2>8. Score calculation (06-12)</h2>
+<table>
+  <tr><th>Component</th><th>Value</th></tr>
+  <tr><td>Idea Card</td><td>67%</td></tr>
+  <tr><td>Business Plan</td><td>51%</td></tr>
+  <tr><td>Average (2 stages)</td><td>59%</td></tr>
+  <tr><td>Cross-stage penalty</td><td>−9%</td></tr>
+  <tr><td><strong>Final score</strong></td><td><strong>50%</strong></td></tr>
+</table>
+
+<footer>
+  Repeat run vs <a href="query1-dubai-2026-06-11.html" style="color:var(--accent)">2026-06-11 baseline</a> ·
+  dreambiz-qa-kit · Query #1 Dubai
+</footer>
+
+</body>
+</html>

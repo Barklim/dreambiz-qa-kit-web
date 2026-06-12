@@ -1,0 +1,11 @@
+{
+  "name": "dreambiz-qa-kit-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Public site for DreamBiz QA reports — date-sorted, freshest by default.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/build.mjs && npx --yes serve dist"
+  }
+}

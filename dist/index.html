@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DreamBiz QA Reports</title>
+  <style>
+    :root {
+      --bg: #0f1117; --surface: #1a1d27; --border: #2a2f3d;
+      --text: #e8eaed; --muted: #9aa0a6; --accent: #5b9fd4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--text);
+      display: flex; flex-direction: column;
+    }
+    header {
+      flex: 0 0 auto;
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+      padding: 0.75rem 1.25rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 10;
+    }
+    header .brand { font-weight: 700; font-size: 0.95rem; }
+    header .brand span { color: var(--muted); font-weight: 400; }
+    .spacer { flex: 1 1 auto; }
+    label { font-size: 0.8rem; color: var(--muted); }
+    select {
+      background: var(--bg); color: var(--text);
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 0.4rem 0.6rem; font-size: 0.85rem; cursor: pointer;
+      min-width: 220px;
+    }
+    select:focus { outline: 1px solid var(--accent); }
+    .latest-badge {
+      font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.04em;
+      color: var(--accent); border: 1px solid var(--accent);
+      border-radius: 4px; padding: 0.1rem 0.4rem;
+    }
+    .frame-wrap { flex: 1 1 auto; position: relative; }
+    iframe { width: 100%; height: 100%; border: 0; background: var(--bg); display: block; }
+    .empty { padding: 2rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">DreamBiz QA <span>· Query #1 Dubai</span></div>
+    <div class="spacer"></div>
+    <label for="report-select">Отчёт по дате:</label>
+    <select id="report-select" aria-label="Выбор отчёта по дате"></select>
+    <span class="latest-badge" id="latest-badge" hidden>latest</span>
+  </header>
+  <div class="frame-wrap">
+    <iframe id="report-frame" title="QA report" referrerpolicy="no-referrer"></iframe>
+  </div>
+
+  <script>
+    (async function () {
+      const select = document.getElementById("report-select");
+      const frame = document.getElementById("report-frame");
+      const badge = document.getElementById("latest-badge");
+
+      let manifest;
+      try {
+        const res = await fetch("manifest.json", { cache: "no-store" });
+        manifest = await res.json();
+      } catch (e) {
+        document.querySelector(".frame-wrap").innerHTML =
+          '<div class="empty">Не удалось загрузить manifest.json</div>';
+        return;
+      }
+
+      const reports = manifest.reports || [];
+      if (!reports.length) {
+        document.querySelector(".frame-wrap").innerHTML =
+          '<div class="empty">Нет отчётов.</div>';
+        return;
+      }
+
+      // manifest is already sorted newest-first.
+      reports.forEach((r, i) => {
+        const opt = document.createElement("option");
+        opt.value = r.file;
+        opt.textContent = r.date + (i === 0 ? "  (свежий)" : "");
+        opt.dataset.index = String(i);
+        select.appendChild(opt);
+      });
+
+      function show(file, index) {
+        frame.src = "reports/" + file;
+        badge.hidden = index !== 0;
+      }
+
+      // Deep-link: ?r=<file> wins, else default to the freshest (index 0).
+      const params = new URLSearchParams(location.search);
+      const requested = params.get("r");
+      const startIdx = requested
+        ? Math.max(0, reports.findIndex((r) => r.file === requested))
+        : 0;
+
+      select.selectedIndex = startIdx;
+      show(reports[startIdx].file, startIdx);
+
+      select.addEventListener("change", () => {
+        const idx = Number(select.selectedOptions[0].dataset.index);
+        show(reports[idx].file, idx);
+        const url = new URL(location.href);
+        url.searchParams.set("r", reports[idx].file);
+        history.replaceState(null, "", url);
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DreamBiz QA Report — Query #1 Dubai — 2026-06-11</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2f3d;
+      --text: #e8eaed;
+      --muted: #9aa0a6;
+      --accent: #5b9fd4;
+      --green: #4caf82;
+      --yellow: #d4a84b;
+      --red: #e05c5c;
+      --orange: #e08a4b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    h1 { font-size: 1.75rem; margin-bottom: 0.25rem; }
+    h2 { font-size: 1.25rem; margin: 2rem 0 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    h3 { font-size: 1rem; margin: 1.25rem 0 0.5rem; color: var(--muted); }
+    p, li { color: var(--muted); font-size: 0.9rem; }
+    li { margin: 0.25rem 0 0.25rem 1.25rem; }
+    .meta { font-size: 0.85rem; color: var(--muted); margin-bottom: 2rem; }
+    .verdict {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--orange);
+      padding: 1.25rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+    }
+    .verdict strong { color: var(--text); font-size: 1.1rem; }
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+    .score-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .score-card .value { font-size: 1.75rem; font-weight: 700; color: var(--text); }
+    .score-card .label { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+    .score-card.warn .value { color: var(--yellow); }
+    .score-card.bad .value { color: var(--red); }
+    .score-card.skip .value { color: var(--muted); font-size: 1rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin: 0.75rem 0;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+    }
+    th { background: var(--surface); color: var(--text); }
+    td { color: var(--muted); }
+    .sev-critical { color: var(--red); font-weight: 600; }
+    .sev-high { color: var(--orange); font-weight: 600; }
+    .sev-medium { color: var(--yellow); }
+    .sev-low { color: var(--muted); }
+    .pass { color: var(--green); }
+    .fail { color: var(--red); }
+    .partial { color: var(--yellow); }
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      margin-right: 0.25rem;
+    }
+    footer { margin-top: 3rem; font-size: 0.75rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 1rem; }
+  </style>
+</head>
+<body>
+
+<h1>DreamBiz QA Report</h1>
+<p class="meta">
+  Query #1 (Dubai) · First run · 2026-06-11 ·
+  GCC Wellness &amp; Education Growth Agency ·
+  Flow: Idea Card + Business Plan (Presentation not tested)
+</p>
+
+<div class="verdict">
+  <strong>Overall score: 48% — Weak</strong>
+  <p style="margin-top:0.5rem">
+    Production readiness: <strong style="color:var(--red)">No</strong>.
+    Strong conversational UX and niche strategy, but financial artifacts contain critical math errors,
+    broken unit economics (LTV $0), and retainer model from chat was replaced with hourly contractor math.
+  </p>
+</div>
+
+<div class="score-grid">
+  <div class="score-card warn"><div class="value">62%</div><div class="label">Idea Card</div></div>
+  <div class="score-card bad"><div class="value">51%</div><div class="label">Business Plan</div></div>
+  <div class="score-card skip"><div class="value">N/A</div><div class="label">Presentation</div></div>
+  <div class="score-card bad"><div class="value">1/5</div><div class="label">Consistency tests</div></div>
+  <div class="score-card bad"><div class="value">13</div><div class="label">Bugs found</div></div>
+</div>
+
+<h2>1. Executive Summary</h2>
+<p>
+  DreamBiz handled Query #1 well at the conversation layer: it accounted for $50K budget, Dubai location,
+  marketing background, 12-month profitability goal, and wellness/education interests. Path A (specialist agency)
+  was developed in depth before Idea Card generation.
+</p>
+<p style="margin-top:0.5rem">
+  Idea Card scored 62% (Fair). Business Plan scored 51% (Weak). Only 1 of 5 financial consistency tests passed.
+  Cross-stage discrepancies (LTV, churn, retainer vs hourly) add −9 pp penalty.
+  Presentation was not tested in this run.
+</p>
+
+<h3>Key findings</h3>
+<ul>
+  <li>LTV displayed as <strong>$0</strong> and LTV:CAC as <strong>0:1</strong> on Idea Card despite positive economics in text</li>
+  <li>Chat discussed retainer AED 12K–50K; artifacts modeled <strong>$100/hr contractor</strong> at $2,500/mo</li>
+  <li>BP cash flow shows <strong>$0 revenue for Years 2–5</strong> — copy-paste failure</li>
+  <li>36 active clients at Month 12 conflicts with 640-hour capacity ceiling ($64K/mo max)</li>
+  <li>Competitor analysis and risk sections are strong; financial engine is unreliable</li>
+</ul>
+
+<h2>2. Flow Timeline</h2>
+<table>
+  <tr><th>Step</th><th>Stage</th><th>Messages</th><th>Result</th></tr>
+  <tr><td>1</td><td>Initial query (Dubai, $50K, wellness/education)</td><td>1</td><td>3 paths proposed — good</td></tr>
+  <tr><td>2</td><td>Deep-dive Path A (agency)</td><td>2</td><td>ICP, pricing AED, GTM — strong</td></tr>
+  <tr><td>3</td><td>Confirm + Idea Card generation</td><td>3</td><td>Card generated, score 61</td></tr>
+  <tr><td>4</td><td>Business Plan generation</td><td>—</td><td>8 sections, ~5 min stated</td></tr>
+  <tr><td>5</td><td>Presentation</td><td>—</td><td class="fail">Not tested</td></tr>
+</table>
+
+<h2>3. Stage 1 — Idea Card (62%)</h2>
+<table>
+  <tr><th>Criterion</th><th>Weight</th><th>Score</th></tr>
+  <tr><td>Relevance to query</td><td>×3</td><td>4</td></tr>
+  <tr><td>Viability</td><td>×3</td><td>4</td></tr>
+  <tr><td>Revenue potential</td><td>×3</td><td>3</td></tr>
+  <tr><td>Originality</td><td>×2</td><td>4</td></tr>
+  <tr><td>Target audience</td><td>×2</td><td>4</td></tr>
+  <tr><td>Completeness</td><td>×2</td><td>3</td></tr>
+  <tr><td>Input adaptability</td><td>×2</td><td>3</td></tr>
+  <tr><td>Scalability</td><td>×1</td><td>3</td></tr>
+  <tr><td>Trend relevance</td><td>×1</td><td>4</td></tr>
+</table>
+<p>Raw: 68/95 = 71.6% · Penalty: unrealistic numbers (−10) · <strong>Final: ~62%</strong></p>
+
+<h3>Red flags triggered</h3>
+<ul>
+  <li><span class="tag">−10</span> Unrealistic / broken numbers (LTV $0, LTV:CAC 0:1, CAC $200 for B2B Dubai)</li>
+</ul>
+
+<h3>Unit economics</h3>
+<table>
+  <tr><th>Metric</th><th>Value</th><th>Verdict</th></tr>
+  <tr><td>Model</td><td>$100/hr × 25h = $2,500/mo</td><td class="partial">Mismatch vs chat retainers AED 12K–50K</td></tr>
+  <tr><td>CAC</td><td>$200</td><td class="fail">Suspiciously low for B2B agency</td></tr>
+  <tr><td>LTV</td><td>$0</td><td class="fail">Broken display</td></tr>
+  <tr><td>LTV:CAC</td><td>0:1 (UI) / ~112:1 (manual)</td><td class="fail">Internal contradiction</td></tr>
+  <tr><td>Churn</td><td>0%/mo</td><td class="fail">Unrealistic</td></tr>
+  <tr><td>Breakeven</td><td>Month 6, 14 clients, $23K</td><td class="pass">Within $50K / 12-mo goal</td></tr>
+  <tr><td>Gross / Net margin</td><td>75% / ~26%</td><td class="partial">Optimistic but plausible for agency</td></tr>
+</table>
+
+<h2>4. Stage 2 — Business Plan (51%)</h2>
+<p>Raw: 70/115 = 60.9% · Penalty: unrealistic numbers (−10) · <strong>Final: ~51%</strong></p>
+
+<h3>Consistency tests: 1 / 5 pass</h3>
+<table>
+  <tr><th>Test</th><th>Result</th><th>Notes</th></tr>
+  <tr><td>T1 Revenue consistency</td><td class="fail">FAIL</td><td>36 clients × $2,500 ≠ $64K/mo; 900h demand vs 640h capacity</td></tr>
+  <tr><td>T2 Cost structure match</td><td class="partial">PARTIAL</td><td>OpEx $316K present; headcount ↔ payroll not linked</td></tr>
+  <tr><td>T3 TAM → SAM → SOM</td><td class="fail">FAIL</td><td>SAM $36M confused with $1.6B wellness market; SOM = Y1 revenue</td></tr>
+  <tr><td>T4 Headcount → Costs</td><td class="fail">FAIL</td><td>Plan: 2–3 FTE Y1, 8–12 Y2; no payroll breakdown in Finances</td></tr>
+  <tr><td>T5 Timeline consistency</td><td class="fail">FAIL</td><td>Y2–Y5 cash flow = $0; cumulative cash flat across years</td></tr>
+</table>
+
+<h3>Section quality highlights</h3>
+<ul>
+  <li><strong>Strong:</strong> Competitors (47 pp), Risks/SWOT, Products (pain points), Marketing GTM</li>
+  <li><strong>Weak:</strong> Finances (5-year model broken), Market (geo mix US 34% for UAE agency)</li>
+  <li><strong>Locked:</strong> Premium Content blocks in Finances, Market, Risks, Marketing</li>
+</ul>
+
+<h2>5. Stage 3 — Presentation</h2>
+<p><em>Not tested in this run. Cross-check BP ↔ Presentation deferred.</em></p>
+
+<h2>6. Cross-stage consistency (Idea Card ↔ BP)</h2>
+<table>
+  <tr><th>Parameter</th><th>Match?</th><th>Notes</th></tr>
+  <tr><td>Business name</td><td class="pass">Yes</td><td>GCC Wellness &amp; Education Growth Agency</td></tr>
+  <tr><td>Target market</td><td class="pass">Yes</td><td>UAE wellness clinics + education institutes</td></tr>
+  <tr><td>Revenue model</td><td class="partial">Partial</td><td>Both hourly/project; chat retainer not carried through</td></tr>
+  <tr><td>ARPU / pricing</td><td class="pass">Yes</td><td>$2,500 consistent</td></tr>
+  <tr><td>LTV / CAC</td><td class="fail">No</td><td>IC: LTV $0; BP: $1,500–$2,000 in KPIs</td></tr>
+  <tr><td>Breakeven</td><td class="pass">Yes</td><td>Month 6, 14 clients, $23K</td></tr>
+  <tr><td>Geography</td><td class="pass">Yes</td><td>Dubai/UAE primary</td></tr>
+  <tr><td>Churn</td><td class="fail">No</td><td>IC: 0% · BP: 5%/mo</td></tr>
+</table>
+<p>Discrepancies: <strong>3</strong> → penalty <strong>−9 pp</strong></p>
+
+<h2>7. Bug Registry (this run)</h2>
+<table>
+  <tr><th>#</th><th>Description</th><th>Severity</th><th>Stage</th><th>Known ID</th></tr>
+  <tr><td>1</td><td>LTV = $0, LTV:CAC = 0:1 on Idea Card</td><td class="sev-critical">Critical</td><td>Idea Card</td><td>H-01</td></tr>
+  <tr><td>2</td><td>Hourly model vs retainer AED 12K–50K from chat</td><td class="sev-critical">Critical</td><td>Chat → IC</td><td>C-05</td></tr>
+  <tr><td>3</td><td>Cash flow Y2–Y5 = $0 revenue</td><td class="sev-critical">Critical</td><td>BP Finances</td><td>H-07</td></tr>
+  <tr><td>4</td><td>36 clients vs 640h capacity conflict</td><td class="sev-critical">Critical</td><td>BP Summary/Finances</td><td>C-01</td></tr>
+  <tr><td>5</td><td>Churn 0% (IC) vs 5% (BP)</td><td class="sev-high">High</td><td>IC ↔ BP</td><td>H-01</td></tr>
+  <tr><td>6</td><td>Rebook 95% vs target 20–30%</td><td class="sev-high">High</td><td>BP Finances/Marketing</td><td>H-01</td></tr>
+  <tr><td>7</td><td>176 engagements/yr vs 36 active clients</td><td class="sev-high">High</td><td>BP Marketing/Finances</td><td>H-01</td></tr>
+  <tr><td>8</td><td>CAC $200 vs CAC &lt; $500 in service KPIs</td><td class="sev-medium">Medium</td><td>BP Marketing</td><td>H-01</td></tr>
+  <tr><td>9</td><td>Utilization 5% typo in Summary (should ~75%)</td><td class="sev-medium">Medium</td><td>BP Summary</td><td>M-01</td></tr>
+  <tr><td>10</td><td>Broken pricing cards ($25 one-time + $125/hr)</td><td class="sev-medium">Medium</td><td>BP Marketing</td><td>M-01</td></tr>
+  <tr><td>11</td><td>AIGA Design Conference listed for wellness agency</td><td class="sev-low">Low</td><td>BP Marketing</td><td>M-01</td></tr>
+  <tr><td>12</td><td>UI buttons in Russian during English flow</td><td class="sev-low">Low</td><td>UX</td><td>M-03</td></tr>
+  <tr><td>13</td><td>Premium Content locked sections in BP</td><td class="sev-medium">Medium</td><td>BP</td><td>H-05</td></tr>
+</table>
+
+<h2>8. UX Assessment</h2>
+<table>
+  <tr><th>Metric</th><th>Value</th><th>Norm</th></tr>
+  <tr><td>Messages to Idea Card</td><td>3</td><td class="partial">1–2 ideal; 3 acceptable</td></tr>
+  <tr><td>Technical failures</td><td>0</td><td class="pass">OK</td></tr>
+  <tr><td>BP generation time</td><td>~5 min (stated)</td><td class="pass">OK</td></tr>
+  <tr><td>Generation completeness</td><td>8/8 sections; Premium locks</td><td class="partial">Partial</td></tr>
+  <tr><td>Next-step guidance</td><td>Yes (BP, service menu, outreach)</td><td class="pass">OK</td></tr>
+  <tr><td>Retainer model support</td><td>Discussed in chat; hourly in artifacts</td><td class="fail">Fail</td></tr>
+</table>
+
+<h2>9. Recommendations</h2>
+<ol>
+  <li><strong>Blocker:</strong> Add sanity-check validator — LTV &gt; 0, LTV:CAC 1:1–10:1, revenue = clients × ARPU × period</li>
+  <li><strong>Blocker:</strong> Sync chat archetype (retainer) with Idea Card / BP financial engine</li>
+  <li><strong>Blocker:</strong> Fix multi-year cash flow template (Y2–Y5 cannot be $0)</li>
+  <li>Capacity model: enforce max clients = capacity_hours / hours_per_client</li>
+  <li>Single source of truth for churn, rebook, LTV across all sections</li>
+  <li>Re-test Presentation when available — priority cross-check for C-04 (content leak)</li>
+</ol>
+
+<h2>10. Score calculation</h2>
+<table>
+  <tr><th>Component</th><th>Value</th></tr>
+  <tr><td>Idea Card</td><td>62%</td></tr>
+  <tr><td>Business Plan</td><td>51%</td></tr>
+  <tr><td>Presentation</td><td>N/A (excluded)</td></tr>
+  <tr><td>Average (2 stages)</td><td>56.5%</td></tr>
+  <tr><td>Cross-stage penalty (−3 × 3)</td><td>−9%</td></tr>
+  <tr><td><strong>Final score</strong></td><td><strong>48%</strong></td></tr>
+</table>
+
+<footer>
+  Generated by DreamBiz QA Testing skill · dreambiz-qa-kit · 2026-06-11 · Query #1 Dubai (first run)
+</footer>
+
+</body>
+</html>

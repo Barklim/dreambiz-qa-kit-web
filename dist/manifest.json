@@ -1,0 +1,15 @@
+{
+  "reports": [
+    {
+      "date": "2026-06-12",
+      "file": "query1-dubai-2026-06-12.html",
+      "title": "DreamBiz QA Report — Query #1 Dubai — 2026-06-12 (repeat)"
+    },
+    {
+      "date": "2026-06-11",
+      "file": "query1-dubai-2026-06-11.html",
+      "title": "DreamBiz QA Report — Query #1 Dubai — 2026-06-11"
+    }
+  ],
+  "generatedAt": "2026-06-12T20:24:45.666Z"
+}
