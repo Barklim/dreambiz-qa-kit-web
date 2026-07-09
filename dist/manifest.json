@@ -1,6 +1,11 @@
 {
   "reports": [
     {
+      "date": "2026-07-10",
+      "file": "new-engine-baseline-2026-07-10-report.html",
+      "title": "DreamBiz QA — Бейслайн нового движка (Q1–Q4)"
+    },
+    {
       "date": "2026-06-12",
       "file": "query1-dubai-2026-06-12.html",
       "title": "DreamBiz QA Report — Query #1 Dubai — 2026-06-12 (repeat)"
@@ -11,5 +16,5 @@
       "title": "DreamBiz QA Report — Query #1 Dubai — 2026-06-11"
     }
   ],
-  "generatedAt": "2026-06-12T20:24:45.666Z"
+  "generatedAt": "2026-07-09T21:27:28.803Z"
 }

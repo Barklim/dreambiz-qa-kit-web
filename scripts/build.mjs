@@ -136,7 +136,7 @@ function shellHtml() {
 </head>
 <body>
   <header>
-    <div class="brand">DreamBiz QA <span>· Query #1 Dubai</span></div>
+    <div class="brand">DreamBiz QA <span>· Reports</span></div>
     <div class="spacer"></div>
     <label for="report-select">Отчёт по дате:</label>
     <select id="report-select" aria-label="Выбор отчёта по дате"></select>
