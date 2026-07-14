@@ -1,0 +1,415 @@
+<title>DreamBiz QA — Карточки идей: прогон Q1–Q4 (2026-07-14)</title>
+<style>
+  :root {
+    --bg:#f4f6f9; --surface:#ffffff; --surface-2:#eef1f6;
+    --ink:#16202e; --ink-2:#4a586b; --ink-3:#8695a8; --line:#dce2eb;
+    --accent:#3f4fd6; --accent-soft:#eaecfb;
+    --crit:#d13b3b; --crit-bg:#fbeaea; --high:#d1811f; --high-bg:#fbf1e2;
+    --med:#2f6fd1; --med-bg:#e7eefb; --low:#5a7d6b; --low-bg:#e9f1ec;
+    --v-exc:#1f9d63; --v-good:#6aa02a; --v-sat:#c99700; --v-weak:#d1811f; --v-unacc:#d13b3b;
+    --st-fixed:#1f9d63; --st-fixed-bg:#e6f4ec; --st-ok:#2f6fd1; --st-ok-bg:#e7eefb;
+    --st-flaky:#c99700; --st-flaky-bg:#faf3dc; --st-broke:#d13b3b; --st-broke-bg:#fbeaea; --st-imp:#5a7d6b; --st-imp-bg:#e9f1ec;
+    --radius:12px;
+    --shadow: 0 1px 2px rgba(22,32,46,.05), 0 4px 16px rgba(22,32,46,.06);
+    --maxw:1120px;
+    --sans:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono:ui-monospace, "SF Mono", "JetBrains Mono", "Menlo", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#0e131b; --surface:#161d28; --surface-2:#1d2633;
+      --ink:#e8edf4; --ink-2:#a7b4c5; --ink-3:#6d7c90; --line:#2a3543;
+      --accent:#8b97f5; --accent-soft:#232a45;
+      --crit:#f0736f; --crit-bg:#2e1a1c; --high:#e8a94e; --high-bg:#2c2317; --med:#6ea3ef; --med-bg:#182333; --low:#82ab93; --low-bg:#172219;
+      --v-exc:#46c489; --v-good:#8fc74e; --v-sat:#e0b93a; --v-weak:#e8a94e; --v-unacc:#f0736f;
+      --st-fixed:#46c489; --st-fixed-bg:#132a1f; --st-ok:#6ea3ef; --st-ok-bg:#152131;
+      --st-flaky:#e0b93a; --st-flaky-bg:#2a2413; --st-broke:#f0736f; --st-broke-bg:#2e1a1c; --st-imp:#82ab93; --st-imp-bg:#172219;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 20px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg:#f4f6f9; --surface:#ffffff; --surface-2:#eef1f6; --ink:#16202e; --ink-2:#4a586b; --ink-3:#8695a8; --line:#dce2eb;
+    --accent:#3f4fd6; --accent-soft:#eaecfb;
+    --crit:#d13b3b; --crit-bg:#fbeaea; --high:#d1811f; --high-bg:#fbf1e2; --med:#2f6fd1; --med-bg:#e7eefb; --low:#5a7d6b; --low-bg:#e9f1ec;
+    --v-exc:#1f9d63; --v-good:#6aa02a; --v-sat:#c99700; --v-weak:#d1811f; --v-unacc:#d13b3b;
+    --st-fixed:#1f9d63; --st-fixed-bg:#e6f4ec; --st-ok:#2f6fd1; --st-ok-bg:#e7eefb;
+    --st-flaky:#c99700; --st-flaky-bg:#faf3dc; --st-broke:#d13b3b; --st-broke-bg:#fbeaea; --st-imp:#5a7d6b; --st-imp-bg:#e9f1ec;
+    --shadow: 0 1px 2px rgba(22,32,46,.05), 0 4px 16px rgba(22,32,46,.06);
+  }
+  :root[data-theme="dark"] {
+    --bg:#0e131b; --surface:#161d28; --surface-2:#1d2633; --ink:#e8edf4; --ink-2:#a7b4c5; --ink-3:#6d7c90; --line:#2a3543;
+    --accent:#8b97f5; --accent-soft:#232a45;
+    --crit:#f0736f; --crit-bg:#2e1a1c; --high:#e8a94e; --high-bg:#2c2317; --med:#6ea3ef; --med-bg:#182333; --low:#82ab93; --low-bg:#172219;
+    --v-exc:#46c489; --v-good:#8fc74e; --v-sat:#e0b93a; --v-weak:#e8a94e; --v-unacc:#f0736f;
+    --st-fixed:#46c489; --st-fixed-bg:#132a1f; --st-ok:#6ea3ef; --st-ok-bg:#152131;
+    --st-flaky:#e0b93a; --st-flaky-bg:#2a2413; --st-broke:#f0736f; --st-broke-bg:#2e1a1c; --st-imp:#82ab93; --st-imp-bg:#172219;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 20px rgba(0,0,0,.35);
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+  a { color:var(--accent); }
+  header { border-bottom:1px solid var(--line); background:linear-gradient(180deg, var(--surface), var(--bg)); }
+  .head-inner { padding:40px 0 30px; }
+  .eyebrow { font-family:var(--mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; }
+  h1 { font-size:clamp(27px,4vw,40px); line-height:1.08; margin:10px 0 8px; letter-spacing:-.02em; text-wrap:balance; font-weight:800; }
+  .sub { color:var(--ink-2); font-size:16px; max-width:64ch; }
+  .meta-row { display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:18px; font-size:13px; color:var(--ink-3); font-family:var(--mono); }
+  .meta-row b { color:var(--ink-2); font-weight:600; }
+  .verdict-banner { margin-top:24px; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); overflow:hidden; display:grid; grid-template-columns:minmax(210px,250px) 1fr; }
+  @media (max-width:760px){ .verdict-banner{ grid-template-columns:1fr; } }
+  .vb-score { padding:26px 28px; display:flex; flex-direction:column; justify-content:center; gap:4px; border-right:1px solid var(--line); background:color-mix(in srgb, var(--v-sat) 9%, var(--surface)); }
+  @media (max-width:760px){ .vb-score{ border-right:0; border-bottom:1px solid var(--line); } }
+  .vb-score .big { font-family:var(--mono); font-size:52px; font-weight:700; line-height:1; color:var(--v-sat); font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+  .vb-score .label { font-size:13px; color:var(--ink-2); }
+  .vb-tag { align-self:flex-start; margin-top:8px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#fff; background:var(--v-sat); padding:3px 10px; border-radius:999px; }
+  .vb-text { padding:24px 28px; }
+  .vb-text p { margin:0 0 10px; color:var(--ink-2); font-size:15px; }
+  .vb-text p:last-child { margin-bottom:0; }
+  .vb-text strong { color:var(--ink); }
+  .scorestrip { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:16px; }
+  @media (max-width:760px){ .scorestrip{ grid-template-columns:repeat(2,1fr); } }
+  .ss-cell { border:1px solid var(--line); border-radius:10px; background:var(--surface); padding:14px 16px; box-shadow:var(--shadow); }
+  .ss-cell.avg { background:var(--accent-soft); border-color:color-mix(in srgb,var(--accent) 30%, var(--line)); }
+  .ss-q { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); }
+  .ss-num { font-family:var(--mono); font-size:30px; font-weight:700; line-height:1.05; margin-top:4px; font-variant-numeric:tabular-nums; }
+  .ss-desc { font-size:12px; color:var(--ink-2); margin-top:3px; }
+  .ss-cell.avg .ss-num { color:var(--accent); }
+  section { padding:40px 0; border-bottom:1px solid var(--line); }
+  .sec-head { display:flex; align-items:baseline; gap:14px; margin-bottom:8px; }
+  .sec-num { font-family:var(--mono); font-size:13px; color:var(--accent); font-weight:700; letter-spacing:.05em; }
+  h2 { font-size:22px; margin:0; letter-spacing:-.01em; font-weight:750; }
+  .sec-desc { color:var(--ink-2); font-size:14px; margin:0 0 22px; max-width:74ch; }
+  h3 { font-size:16px; margin:26px 0 10px; letter-spacing:-.005em; }
+  p { font-size:15px; color:var(--ink-2); }
+  p strong, li strong { color:var(--ink); }
+  .matrix-scroll { overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); background:var(--surface); }
+  table.matrix { border-collapse:collapse; width:100%; min-width:720px; font-size:13px; }
+  table.matrix th, table.matrix td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:middle; }
+  table.matrix thead th { position:sticky; top:0; background:var(--surface-2); font-size:12px; letter-spacing:.03em; color:var(--ink-2); font-weight:700; }
+  table.matrix thead th.q { font-family:var(--mono); text-align:center; width:132px; }
+  table.matrix tbody th { font-weight:600; color:var(--ink); width:230px; }
+  table.matrix td.q { text-align:center; }
+  table.matrix tbody tr:last-child td, table.matrix tbody tr:last-child th { border-bottom:0; }
+  table.matrix tbody tr:hover td, table.matrix tbody tr:hover th { background:color-mix(in srgb,var(--accent) 4%, transparent); }
+  .chip { display:inline-flex; align-items:center; gap:5px; font-family:var(--mono); font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; letter-spacing:.02em; white-space:nowrap; }
+  .chip.fixed { color:var(--st-fixed); background:var(--st-fixed-bg); }
+  .chip.ok    { color:var(--st-ok);    background:var(--st-ok-bg); }
+  .chip.flaky { color:var(--st-flaky); background:var(--st-flaky-bg); }
+  .chip.broke { color:var(--st-broke); background:var(--st-broke-bg); }
+  .chip.imp   { color:var(--st-imp);   background:var(--st-imp-bg); }
+  .chip.na    { color:var(--ink-3);    background:var(--surface-2); }
+  .verdict-col { font-family:var(--mono); font-size:11px; font-weight:700; }
+  .legend { display:flex; flex-wrap:wrap; gap:8px 14px; margin-top:14px; font-size:12px; color:var(--ink-2); }
+  .legend .chip { font-size:10px; }
+  .case { border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); margin-top:16px; overflow:hidden; }
+  .case-head { display:grid; grid-template-columns:64px 1fr auto; gap:16px; align-items:center; padding:18px 22px; border-bottom:1px solid var(--line); background:var(--surface-2); }
+  .case-score { font-family:var(--mono); font-size:30px; font-weight:700; line-height:1; text-align:center; font-variant-numeric:tabular-nums; }
+  .case-title { font-size:16px; font-weight:700; margin:0; }
+  .case-title span { display:block; font-weight:400; font-size:13px; color:var(--ink-2); margin-top:2px; }
+  .case-meta { font-family:var(--mono); font-size:11px; color:var(--ink-3); text-align:right; }
+  .verd { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:3px 9px; border-radius:999px; color:#fff; display:inline-block; }
+  .verd.exc { background:var(--v-exc); } .verd.good { background:var(--v-good); } .verd.sat { background:var(--v-sat); }
+  .case-body { padding:18px 22px; }
+  .case-body ul { margin:0; padding-left:0; list-style:none; display:flex; flex-direction:column; gap:9px; }
+  .case-body li { font-size:14px; color:var(--ink-2); padding-left:22px; position:relative; }
+  .case-body li::before { content:""; position:absolute; left:4px; top:8px; width:7px; height:7px; border-radius:2px; }
+  .case-body li.pos::before { background:var(--v-exc); }
+  .case-body li.neg::before { background:var(--crit); }
+  .case-body li.mid::before { background:var(--high); }
+  .mono { font-family:var(--mono); font-variant-numeric:tabular-nums; }
+  .roots { display:flex; flex-direction:column; gap:16px; }
+  .root { border:1px solid var(--line); border-left:4px solid var(--crit); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); padding:20px 24px; }
+  .root.p2 { border-left-color:var(--high); }
+  .root.p3 { border-left-color:var(--med); }
+  .root-head { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .root-rank { font-family:var(--mono); font-size:12px; font-weight:700; color:#fff; background:var(--crit); padding:2px 9px; border-radius:6px; letter-spacing:.03em; }
+  .root.p2 .root-rank { background:var(--high); } .root.p3 .root-rank { background:var(--med); }
+  .root h3 { margin:0; font-size:16px; color:var(--ink); }
+  .root p { margin:12px 0 0; font-size:14px; }
+  .root .where { margin-top:12px; font-family:var(--mono); font-size:12px; color:var(--ink-2); background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
+  .root .where b { color:var(--accent); }
+  .wins { display:grid; grid-template-columns:repeat(2,1fr); gap:10px 20px; margin-top:6px; }
+  @media (max-width:640px){ .wins{ grid-template-columns:1fr; } }
+  .win { display:flex; gap:10px; align-items:flex-start; font-size:14px; color:var(--ink-2); }
+  .win .tick { color:var(--v-exc); font-weight:800; flex:none; }
+  .callout { border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:var(--radius); background:var(--accent-soft); padding:18px 22px; margin-top:20px; }
+  .callout p { margin:0; color:var(--ink); font-size:15px; }
+  .callout p + p { margin-top:8px; }
+  footer { padding:30px 0 60px; color:var(--ink-3); font-size:13px; font-family:var(--mono); }
+  .kbd { font-family:var(--mono); font-size:.92em; background:var(--surface-2); border:1px solid var(--line); border-radius:5px; padding:1px 6px; color:var(--ink-2); }
+</style>
+
+<header>
+  <div class="wrap head-inner">
+    <div class="eyebrow">DreamBiz QA · Карточки идей · сравнение</div>
+    <h1>Карточки идей: полный прогон 4 канонических кейсов</h1>
+    <p class="sub">Второй бейслайн карточек на переработанном движке (после фикса stale-билда). Все 4 кейса сгенерировались. Оценка по 9-критериальной методике Idea Card (/95). Сравнение с бейслайном 2026-07-10.</p>
+    <div class="meta-row">
+      <span><b>Дата:</b> 2026-07-14</span>
+      <span><b>Движок:</b> dreambiz-api (agentic, dev)</span>
+      <span><b>Кейсов:</b> 4 / 4</span>
+      <span><b>Артефакт:</b> Idea Card (/95)</span>
+      <span><b>Предыдущий:</b> 2026-07-10 (67.5%)</span>
+    </div>
+
+    <div class="verdict-banner">
+      <div class="vb-score">
+        <div class="big">72<span style="font-size:24px">.5%</span></div>
+        <div class="label">Средний балл по 4 карточкам</div>
+        <div class="vb-tag">Хорошо</div>
+      </div>
+      <div class="vb-text">
+        <p><strong>Движок стабильно генерирует, идею не подменяет, ниши держит, валюта в карточке чистая 4/4.</strong> Средний балл поднялся <span class="mono">67.5% → 72.5%</span> относительно прошлого бейслайна. Лучший кейс — Q3 (Бразилия, «холодный» вход) с 83%.</p>
+        <p>Потолок держат <strong>рендер-баги числового слоя</strong>, а не логика: churn отображается <span class="mono">×100</span> («69%» вместо «0.69%»), капитал founder игнорируется (B6, Q4 <span class="mono">€200K → required €95K</span> vs peak draw <span class="mono">€1.4M</span>), «Required investment» ≠ «peak capital draw» (B4). Enterprise-вход Q4 — единственный, где движок переопределил все 3 founder-числа, отсюда просадка до 60%.</p>
+      </div>
+    </div>
+
+    <div class="scorestrip">
+      <div class="ss-cell"><div class="ss-q">Q1 · AED</div><div class="ss-num" style="color:var(--v-good)">75</div><div class="ss-desc">Education, Дубай</div></div>
+      <div class="ss-cell"><div class="ss-q">Q2 · THB</div><div class="ss-num" style="color:var(--v-good)">72</div><div class="ss-desc">Meal subscription, SEA</div></div>
+      <div class="ss-cell"><div class="ss-q">Q3 · BRL</div><div class="ss-num" style="color:var(--v-exc)">83</div><div class="ss-desc">Service, Бразилия</div></div>
+      <div class="ss-cell"><div class="ss-q">Q4 · EUR</div><div class="ss-num" style="color:var(--v-sat)">60</div><div class="ss-desc">B2B AI SaaS, Германия</div></div>
+      <div class="ss-cell avg"><div class="ss-q">Среднее</div><div class="ss-num">72.5</div><div class="ss-desc">4 канонических кейса</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Регрессионная матрица</h2></div>
+    <p class="sec-desc">Каждый аспект × каждый кейс. Кейсы упорядочены по типу модели и валюте (education/AED → subscription/THB → service/BRL → SaaS/EUR) — заодно мультивалютная проверка. Столбец «Вердикт» — устойчивость аспекта через прогон.</p>
+    <div class="matrix-scroll">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th>Аспект / баг</th>
+            <th class="q">Q1 · AED<br><span style="font-weight:400;color:var(--ink-3)">educ.</span></th>
+            <th class="q">Q2 · THB<br><span style="font-weight:400;color:var(--ink-3)">subscr.</span></th>
+            <th class="q">Q3 · BRL<br><span style="font-weight:400;color:var(--ink-3)">service</span></th>
+            <th class="q">Q4 · EUR<br><span style="font-weight:400;color:var(--ink-3)">SaaS</span></th>
+            <th>Вердикт</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>генерация стабильна (карточка есть)</th>
+            <td class="q"><span class="chip fixed">✓</span></td>
+            <td class="q"><span class="chip fixed">✓</span></td>
+            <td class="q"><span class="chip fixed">✓</span></td>
+            <td class="q"><span class="chip fixed">✓</span></td>
+            <td class="verdict-col" style="color:var(--st-fixed)">ОК 4/4</td>
+          </tr>
+          <tr>
+            <th>идея не подменена</th>
+            <td class="q"><span class="chip fixed">✓</span></td>
+            <td class="q"><span class="chip fixed">✓</span></td>
+            <td class="q"><span class="chip fixed">✓</span></td>
+            <td class="q"><span class="chip fixed">✓</span></td>
+            <td class="verdict-col" style="color:var(--st-fixed)">ОК 4/4</td>
+          </tr>
+          <tr>
+            <th>ниша не упрощена</th>
+            <td class="q"><span class="chip fixed">✓</span></td>
+            <td class="q"><span class="chip fixed">✓</span></td>
+            <td class="q"><span class="chip fixed">✓</span></td>
+            <td class="q"><span class="chip fixed">✓ deep-tech</span></td>
+            <td class="verdict-col" style="color:var(--st-fixed)">ОК 4/4</td>
+          </tr>
+          <tr>
+            <th>валюта в карточке</th>
+            <td class="q"><span class="chip fixed">AED</span></td>
+            <td class="q"><span class="chip fixed">THB</span></td>
+            <td class="q"><span class="chip fixed">BRL</span></td>
+            <td class="q"><span class="chip fixed">EUR</span></td>
+            <td class="verdict-col" style="color:var(--st-fixed)">ОК 4/4</td>
+          </tr>
+          <tr>
+            <th>churn отображается корректно</th>
+            <td class="q"><span class="chip ok">ок</span></td>
+            <td class="q"><span class="chip ok">ок</span></td>
+            <td class="q"><span class="chip ok">ок</span></td>
+            <td class="q"><span class="chip broke">×100 «69%»</span></td>
+            <td class="verdict-col" style="color:var(--st-broke)">рендер ×100</td>
+          </tr>
+          <tr>
+            <th>LTV:CAC реалистичен (3–8:1)</th>
+            <td class="q"><span class="chip flaky">погранич.</span></td>
+            <td class="q"><span class="chip flaky">погранич.</span></td>
+            <td class="q"><span class="chip ok">ок</span></td>
+            <td class="q"><span class="chip flaky">14.1:1</span></td>
+            <td class="verdict-col" style="color:var(--st-flaky)">нестабильно</td>
+          </tr>
+          <tr>
+            <th>required = peak capital draw (B4)</th>
+            <td class="q"><span class="chip flaky">~</span></td>
+            <td class="q"><span class="chip broke">2.3×</span></td>
+            <td class="q"><span class="chip flaky">~</span></td>
+            <td class="q"><span class="chip broke">€95K vs €1.4M</span></td>
+            <td class="verdict-col" style="color:var(--st-broke)">ломается</td>
+          </tr>
+          <tr>
+            <th>капитал / контекст founder учтён (B6)</th>
+            <td class="q"><span class="chip ok">✓</span></td>
+            <td class="q"><span class="chip na">—</span></td>
+            <td class="q"><span class="chip na">—</span></td>
+            <td class="q"><span class="chip broke">3 входа override</span></td>
+            <td class="verdict-col" style="color:var(--st-broke)">игнор на Q4</td>
+          </tr>
+          <tr>
+            <th>net vs gross согласованы</th>
+            <td class="q"><span class="chip ok">✓</span></td>
+            <td class="q"><span class="chip ok">✓</span></td>
+            <td class="q"><span class="chip ok">✓</span></td>
+            <td class="q"><span class="chip flaky">net −3.5%</span></td>
+            <td class="verdict-col" style="color:var(--st-imp)">лучше прошл.</td>
+          </tr>
+          <tr>
+            <th>утечка research / язык в карточке (B7)</th>
+            <td class="q"><span class="chip imp">чисто</span></td>
+            <td class="q"><span class="chip imp">чисто</span></td>
+            <td class="q"><span class="chip imp">чисто</span></td>
+            <td class="q"><span class="chip imp">чисто</span></td>
+            <td class="verdict-col" style="color:var(--st-imp)">на карточке ОК</td>
+          </tr>
+          <tr>
+            <th>работа с «пустым» входом</th>
+            <td class="q"><span class="chip na">—</span></td>
+            <td class="q"><span class="chip na">—</span></td>
+            <td class="q"><span class="chip fixed">✓ уточн. вопрос</span></td>
+            <td class="q"><span class="chip na">—</span></td>
+            <td class="verdict-col" style="color:var(--st-fixed)">ОК</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span class="chip fixed">починен / ОК</span>
+      <span class="chip ok">корректно в кейсе</span>
+      <span class="chip flaky">частично / погранично</span>
+      <span class="chip broke">сломано</span>
+      <span class="chip imp">улучшается</span>
+      <span class="chip na">не применимо</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Три системных корня</h2></div>
+    <p class="sec-desc">Отдельные баги матрицы сводятся к трём причинам. По приоритету для фикса — от самого частого/дешёвого к самому глубокому.</p>
+    <div class="roots">
+
+      <div class="root">
+        <div class="root-head"><span class="root-rank">Приоритет 1</span><h3>Числовой форматтер теряет/сдвигает десятичную (класс ×100 / ÷100 / ×1000)</h3></div>
+        <p>Ключевое открытие прогона: множество «фантазийных» чисел — не логика, а <strong>рендер</strong>. В Q4 churn отображается <span class="mono">«69%»</span>, хотя истинное значение <span class="mono">«0.69%»/мес ≈ 8%/год</span> (движок сам печатает оба в одном BP). LTV <span class="mono">€313K</span> и LTV:CAC <span class="mono">14.1:1</span> посчитаны по <em>правильному</em> 0.69% — то есть математически валидны, их просто уродует форматтер на выводе.</p>
+        <div class="where"><b>Фикс:</b> единая точка форматирования долей/валют. Доля, уже выраженная в процентах, не должна множиться на 100 повторно; денежные значения не должны получать суффикс <span class="mono">K/×1000</span> дважды. Проверить и на карточке, и в BP-нодах.</div>
+      </div>
+
+      <div class="root p2">
+        <div class="root-head"><span class="root-rank">Приоритет 2</span><h3>Founder-входы переопределяются движком (B6)</h3></div>
+        <p>На Q4 движок <strong>переопределил все три заданных founder-числа</strong> (GM, CAC, churn), пересчитав экономику по своим дефолтам вместо пользовательских. Капитал <span class="mono">€200K pre-seed</span> не учтён при расчёте required <span class="mono">€95K</span>, а peak capital draw доходит до <span class="mono">€1.4M</span> (B4). Это единственный кейс с полным override — и единственный, где карточка просела до 60%.</p>
+        <div class="where"><b>Где искать:</b> слой, где founder-параметры конкурируют с авто-исследованными. Founder-числа должны иметь приоритет как «доверенные», а не отбраковываться.</div>
+      </div>
+
+      <div class="root p3">
+        <div class="root-head"><span class="root-rank">Приоритет 3</span><h3>required ≠ peak capital draw (B4)</h3></div>
+        <p>«Required investment» считается не как минимум капитала, покрывающий самую глубокую точку кассового провала, а как отдельная величина. Отсюда <span class="mono">required €95K</span> при <span class="mono">peak draw €1.4M</span> (Q4) и <span class="mono">2.3×</span> разрыв (Q2). Пользователь недооценивает реальную потребность в капитале.</p>
+        <div class="where"><b>Фикс:</b> required = |min(накопленный cash-flow)| + буфер. Сверять с peak trough как инвариант перед сборкой карточки.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Разбор по кейсам</h2></div>
+    <p class="sec-desc">Балл (/95 → %), вердикт и ключевые находки каждой карточки. «Холодный» вход Q3 дал лучший результат прогона; enterprise-override Q4 — худший.</p>
+
+    <div class="case">
+      <div class="case-head">
+        <div class="case-score" style="color:var(--v-good)">75</div>
+        <div><p class="case-title">Q1 — Education/wellness accelerator<span>Cohort education · Дубай · AED · founder-контекст ($50K, marketing 7 лет)</span></p></div>
+        <div class="case-meta"><span class="verd good">Хорошо</span><br>≈75% · lvl good</div>
+      </div>
+      <div class="case-body">
+        <ul>
+          <li class="pos"><strong>Учёл ограничения входа</strong>: бюджет $50K, навыки marketing/management, локация Дубай, timeline 12мес — всё отражено. Валюта AED чистая, идея не подменена.</li>
+          <li class="mid"><strong>LTV:CAC погранично высок</strong>, forecast оптимистичен, но в разумных рамках для education-cohort.</li>
+          <li class="neg"><strong>required ≠ peak draw</strong> — мягкий разрыв (B4).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="case-head">
+        <div class="case-score" style="color:var(--v-good)">72</div>
+        <div><p class="case-title">Q2 — Multi-city Office Lunch Subscription<span>Subscription (физ.) · Бангкок/KL/Джакарта · THB · мультивалюта/мультигород</span></p></div>
+        <div class="case-meta"><span class="verd good">Хорошо</span><br>≈72% · lvl good</div>
+      </div>
+      <div class="case-body">
+        <ul>
+          <li class="pos"><strong>Не подменил идею</strong>, три города удержаны, subscription-модель отработана, валюта THB чистая.</li>
+          <li class="neg"><strong>required 7M vs peak 16.3M</strong> (2.3×, B4) — недооценка капитала.</li>
+          <li class="mid"><strong>LTV:CAC погранично</strong>; юнит-экономика в целом сходится, но с оптимистичным уклоном.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="case-head">
+        <div class="case-score" style="color:var(--v-exc)">83</div>
+        <div><p class="case-title">Q3 — Service micro-agency<span>Service / «холодный» вход · Бразилия · BRL · нет идеи, нет опыта, нет капитала</span></p></div>
+        <div class="case-meta"><span class="verd exc">Отлично</span><br>≈83% · lvl exc — лучший</div>
+      </div>
+      <div class="case-body">
+        <ul>
+          <li class="pos"><strong>Образцовая работа с пустотой</strong>: задал уточняющий вопрос вместо выдумывания founder-данных, учёл отсутствие опыта/капитала, дал реалистичную «стартовую» идею.</li>
+          <li class="pos"><strong>Экономика сходится</strong>, валюта BRL чистая, churn↔LTV корректны, честный скоринг.</li>
+          <li class="mid"><strong>Единственный «cold-start» кейс</strong> — и лучший результат прогона. Подтверждает: движок силён, когда сам держит когерентность без конфликта с founder-входом.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="case-head">
+        <div class="case-score" style="color:var(--v-sat)">60</div>
+        <div><p class="case-title">Q4 — AI fire-safety compliance (DIN MB)<span>B2B enterprise SaaS · Германия · EUR · deep-tech, €200K pre-seed</span></p></div>
+        <div class="case-meta"><span class="verd sat">Удовл.</span><br>≈60% · lvl sat — худший</div>
+      </div>
+      <div class="case-body">
+        <ul>
+          <li class="neg"><strong>Переопределил все 3 founder-входа</strong> (GM, CAC, churn) — B6. Единственный кейс с полным override, отсюда просадка.</li>
+          <li class="neg"><strong>churn «69%» = ×100 рендер-баг</strong> (истина 0.69%/мес). LTV €313K и LTV:CAC 14.1:1 при этом посчитаны по правильному значению — валидны, ломается только вывод.</li>
+          <li class="neg"><strong>€200K → required €95K</strong> vs peak draw €1.4M — капитал founder проигнорирован (B6) и required ≠ peak (B4).</li>
+          <li class="pos"><strong>Deep-tech ниша не упрощена</strong> (DIN/MBO, fire-safety, enterprise scope), net −3.5% честен, EUR на карточке чист.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>Что уже работает</h2></div>
+    <p class="sec-desc">Фундамент, на который можно опираться при фиксах.</p>
+    <div class="wins">
+      <div class="win"><span class="tick">✓</span><span><strong>Генерация стабильна</strong> — 4/4 карточки собрались, ни одного abstain (в отличие от stale-билда).</span></div>
+      <div class="win"><span class="tick">✓</span><span><strong>Идею не подменяет</strong> — 4/4, включая готовые идеи Q2/Q4.</span></div>
+      <div class="win"><span class="tick">✓</span><span><strong>Сложную нишу не упрощает</strong> — deep-tech Q4 (DIN/MBO fire-safety) на экспертном уровне.</span></div>
+      <div class="win"><span class="tick">✓</span><span><strong>Валюта в карточке</strong> — чистая 4/4 (AED / THB / BRL / EUR).</span></div>
+      <div class="win"><span class="tick">✓</span><span><strong>Работа с неопределённостью</strong> — Q3 задал уточняющий вопрос, дал лучший результат прогона.</span></div>
+      <div class="win"><span class="tick">✓</span><span><strong>Средний балл вырос</strong> — <span class="mono">67.5% → 72.5%</span> к прошлому бейслайну.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>Вывод</h2></div>
+    <div class="callout">
+      <p><strong>Карточки идей — самый сильный артефакт движка.</strong> Все базовые способности на месте 4/4, средний балл «Хорошо» (72.5%). Главное открытие: значительная часть «сломанных» чисел — <strong>рендер-баги форматтера</strong> (×100 churn), а не ошибки в логике; лежащая под ними экономика чаще всего корректна.</p>
+      <p>Просадка Q4 объясняется <strong>единственным механизмом — override founder-входов (B6)</strong>. Убери его и почини форматтер (Приоритет 1) — enterprise-кейс подтянется к уровню Q1/Q2/Q3. Три корня локальны, чинятся правками, а не переписыванием.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  DreamBiz QA-kit · Карточки идей, прогон Q1–Q4 · 2026-07-14 · 4/4 кейса · методика Idea Card (9 критериев /95)<br>
+  Переключение темы — тумблер <span class="kbd">◐</span> в интерфейсе просмотра. См. также сводный отчёт по бизнес-планам и 4 полных прогона.
+</footer>

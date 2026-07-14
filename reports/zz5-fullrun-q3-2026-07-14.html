@@ -1,0 +1,372 @@
+<title>DreamBiz QA — Q3 полный прогон: карточка → BP → презентация (2026-07-14)</title>
+<style>
+  :root {
+    --bg:#f4f6f9; --surface:#ffffff; --surface-2:#eef1f6;
+    --ink:#16202e; --ink-2:#4a586b; --ink-3:#8695a8; --line:#dce2eb;
+    --accent:#3f4fd6; --accent-soft:#eaecfb;
+
+    --crit:#d13b3b; --crit-bg:#fbeaea; --high:#d1811f; --high-bg:#fbf1e2;
+    --med:#2f6fd1; --med-bg:#e7eefb; --low:#5a7d6b; --low-bg:#e9f1ec;
+
+    --v-exc:#1f9d63; --v-good:#6aa02a; --v-sat:#c99700; --v-weak:#d1811f; --v-unacc:#d13b3b;
+
+    /* regression status */
+    --st-fixed:#1f9d63; --st-fixed-bg:#e6f4ec;
+    --st-ok:#2f6fd1;    --st-ok-bg:#e7eefb;
+    --st-flaky:#c99700; --st-flaky-bg:#faf3dc;
+    --st-broke:#d13b3b; --st-broke-bg:#fbeaea;
+    --st-imp:#5a7d6b;   --st-imp-bg:#e9f1ec;
+
+    --radius:12px;
+    --shadow: 0 1px 2px rgba(22,32,46,.05), 0 4px 16px rgba(22,32,46,.06);
+    --maxw:1120px;
+    --sans:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono:ui-monospace, "SF Mono", "JetBrains Mono", "Menlo", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#0e131b; --surface:#161d28; --surface-2:#1d2633;
+      --ink:#e8edf4; --ink-2:#a7b4c5; --ink-3:#6d7c90; --line:#2a3543;
+      --accent:#8b97f5; --accent-soft:#232a45;
+      --crit:#f0736f; --crit-bg:#2e1a1c; --high:#e8a94e; --high-bg:#2c2317;
+      --med:#6ea3ef; --med-bg:#182333; --low:#82ab93; --low-bg:#172219;
+      --v-exc:#46c489; --v-good:#8fc74e; --v-sat:#e0b93a; --v-weak:#e8a94e; --v-unacc:#f0736f;
+      --st-fixed:#46c489; --st-fixed-bg:#132a1f; --st-ok:#6ea3ef; --st-ok-bg:#152131;
+      --st-flaky:#e0b93a; --st-flaky-bg:#2a2413; --st-broke:#f0736f; --st-broke-bg:#2e1a1c;
+      --st-imp:#82ab93; --st-imp-bg:#172219;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 20px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg:#f4f6f9; --surface:#ffffff; --surface-2:#eef1f6; --ink:#16202e; --ink-2:#4a586b; --ink-3:#8695a8; --line:#dce2eb;
+    --accent:#3f4fd6; --accent-soft:#eaecfb;
+    --crit:#d13b3b; --crit-bg:#fbeaea; --high:#d1811f; --high-bg:#fbf1e2; --med:#2f6fd1; --med-bg:#e7eefb; --low:#5a7d6b; --low-bg:#e9f1ec;
+    --v-exc:#1f9d63; --v-good:#6aa02a; --v-sat:#c99700; --v-weak:#d1811f; --v-unacc:#d13b3b;
+    --st-fixed:#1f9d63; --st-fixed-bg:#e6f4ec; --st-ok:#2f6fd1; --st-ok-bg:#e7eefb;
+    --st-flaky:#c99700; --st-flaky-bg:#faf3dc; --st-broke:#d13b3b; --st-broke-bg:#fbeaea; --st-imp:#5a7d6b; --st-imp-bg:#e9f1ec;
+    --shadow: 0 1px 2px rgba(22,32,46,.05), 0 4px 16px rgba(22,32,46,.06);
+  }
+  :root[data-theme="dark"] {
+    --bg:#0e131b; --surface:#161d28; --surface-2:#1d2633; --ink:#e8edf4; --ink-2:#a7b4c5; --ink-3:#6d7c90; --line:#2a3543;
+    --accent:#8b97f5; --accent-soft:#232a45;
+    --crit:#f0736f; --crit-bg:#2e1a1c; --high:#e8a94e; --high-bg:#2c2317; --med:#6ea3ef; --med-bg:#182333; --low:#82ab93; --low-bg:#172219;
+    --v-exc:#46c489; --v-good:#8fc74e; --v-sat:#e0b93a; --v-weak:#e8a94e; --v-unacc:#f0736f;
+    --st-fixed:#46c489; --st-fixed-bg:#132a1f; --st-ok:#6ea3ef; --st-ok-bg:#152131;
+    --st-flaky:#e0b93a; --st-flaky-bg:#2a2413; --st-broke:#f0736f; --st-broke-bg:#2e1a1c; --st-imp:#82ab93; --st-imp-bg:#172219;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 20px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+  a { color:var(--accent); }
+
+  /* header */
+  header { border-bottom:1px solid var(--line); background:linear-gradient(180deg, var(--surface), var(--bg)); }
+  .head-inner { padding:40px 0 30px; }
+  .eyebrow { font-family:var(--mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; }
+  h1 { font-size:clamp(27px,4vw,40px); line-height:1.08; margin:10px 0 8px; letter-spacing:-.02em; text-wrap:balance; font-weight:800; }
+  .sub { color:var(--ink-2); font-size:16px; max-width:64ch; }
+  .meta-row { display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:18px; font-size:13px; color:var(--ink-3); font-family:var(--mono); }
+  .meta-row b { color:var(--ink-2); font-weight:600; }
+
+  /* verdict banner */
+  .verdict-banner { margin-top:24px; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); overflow:hidden; display:grid; grid-template-columns:minmax(210px,250px) 1fr; }
+  @media (max-width:760px){ .verdict-banner{ grid-template-columns:1fr; } }
+  .vb-score { padding:26px 28px; display:flex; flex-direction:column; justify-content:center; gap:4px; border-right:1px solid var(--line); background:color-mix(in srgb, var(--v-sat) 9%, var(--surface)); }
+  @media (max-width:760px){ .vb-score{ border-right:0; border-bottom:1px solid var(--line); } }
+  .vb-score .big { font-family:var(--mono); font-size:52px; font-weight:700; line-height:1; color:var(--v-sat); font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+  .vb-score .label { font-size:13px; color:var(--ink-2); }
+  .vb-tag { align-self:flex-start; margin-top:8px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#fff; background:var(--v-sat); padding:3px 10px; border-radius:999px; }
+  .vb-text { padding:24px 28px; }
+  .vb-text p { margin:0 0 10px; color:var(--ink-2); font-size:15px; }
+  .vb-text p:last-child { margin-bottom:0; }
+  .vb-text strong { color:var(--ink); }
+
+  /* case score strip */
+  .scorestrip { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:16px; }
+  @media (max-width:760px){ .scorestrip{ grid-template-columns:repeat(2,1fr); } }
+  .ss-cell { border:1px solid var(--line); border-radius:10px; background:var(--surface); padding:14px 16px; box-shadow:var(--shadow); }
+  .ss-cell.avg { background:var(--accent-soft); border-color:color-mix(in srgb,var(--accent) 30%, var(--line)); }
+  .ss-q { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); }
+  .ss-num { font-family:var(--mono); font-size:30px; font-weight:700; line-height:1.05; margin-top:4px; font-variant-numeric:tabular-nums; }
+  .ss-desc { font-size:12px; color:var(--ink-2); margin-top:3px; }
+  .ss-cell.avg .ss-num { color:var(--accent); }
+
+  /* section scaffold */
+  section { padding:40px 0; border-bottom:1px solid var(--line); }
+  .sec-head { display:flex; align-items:baseline; gap:14px; margin-bottom:8px; }
+  .sec-num { font-family:var(--mono); font-size:13px; color:var(--accent); font-weight:700; letter-spacing:.05em; }
+  h2 { font-size:22px; margin:0; letter-spacing:-.01em; font-weight:750; }
+  .sec-desc { color:var(--ink-2); font-size:14px; margin:0 0 22px; max-width:74ch; }
+  h3 { font-size:16px; margin:26px 0 10px; letter-spacing:-.005em; }
+  p { font-size:15px; color:var(--ink-2); }
+  p strong, li strong { color:var(--ink); }
+
+  /* regression matrix */
+  .matrix-scroll { overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); background:var(--surface); }
+  table.matrix { border-collapse:collapse; width:100%; min-width:720px; font-size:13px; }
+  table.matrix th, table.matrix td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:middle; }
+  table.matrix thead th { position:sticky; top:0; background:var(--surface-2); font-size:12px; letter-spacing:.03em; color:var(--ink-2); font-weight:700; }
+  table.matrix thead th.q { font-family:var(--mono); text-align:center; width:132px; }
+  table.matrix tbody th { font-weight:600; color:var(--ink); width:230px; }
+  table.matrix td.q { text-align:center; }
+  table.matrix tbody tr:last-child td, table.matrix tbody tr:last-child th { border-bottom:0; }
+  table.matrix tbody tr:hover td, table.matrix tbody tr:hover th { background:color-mix(in srgb,var(--accent) 4%, transparent); }
+
+  .chip { display:inline-flex; align-items:center; gap:5px; font-family:var(--mono); font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; letter-spacing:.02em; white-space:nowrap; }
+  .chip.fixed { color:var(--st-fixed); background:var(--st-fixed-bg); }
+  .chip.ok    { color:var(--st-ok);    background:var(--st-ok-bg); }
+  .chip.flaky { color:var(--st-flaky); background:var(--st-flaky-bg); }
+  .chip.broke { color:var(--st-broke); background:var(--st-broke-bg); }
+  .chip.imp   { color:var(--st-imp);   background:var(--st-imp-bg); }
+  .chip.na    { color:var(--ink-3);    background:var(--surface-2); }
+  .cell-note { display:block; font-size:11px; color:var(--ink-3); margin-top:3px; font-family:var(--mono); text-align:center; }
+  .verdict-col { font-family:var(--mono); font-size:11px; font-weight:700; }
+
+  .legend { display:flex; flex-wrap:wrap; gap:8px 14px; margin-top:14px; font-size:12px; color:var(--ink-2); }
+  .legend .chip { font-size:10px; }
+
+  /* case cards */
+  .case { border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); margin-top:16px; overflow:hidden; }
+  .case-head { display:grid; grid-template-columns:64px 1fr auto; gap:16px; align-items:center; padding:18px 22px; border-bottom:1px solid var(--line); background:var(--surface-2); }
+  .case-score { font-family:var(--mono); font-size:30px; font-weight:700; line-height:1; text-align:center; font-variant-numeric:tabular-nums; }
+  .case-title { font-size:16px; font-weight:700; margin:0; }
+  .case-title span { display:block; font-weight:400; font-size:13px; color:var(--ink-2); margin-top:2px; }
+  .case-meta { font-family:var(--mono); font-size:11px; color:var(--ink-3); text-align:right; }
+  .verd { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:3px 9px; border-radius:999px; color:#fff; display:inline-block; }
+  .verd.good { background:var(--v-good); } .verd.sat { background:var(--v-sat); }
+  .case-body { padding:18px 22px; }
+  .case-body ul { margin:0; padding-left:0; list-style:none; display:flex; flex-direction:column; gap:9px; }
+  .case-body li { font-size:14px; color:var(--ink-2); padding-left:22px; position:relative; }
+  .case-body li::before { content:""; position:absolute; left:4px; top:8px; width:7px; height:7px; border-radius:2px; }
+  .case-body li.pos::before { background:var(--v-exc); }
+  .case-body li.neg::before { background:var(--crit); }
+  .case-body li.mid::before { background:var(--high); }
+  .mono { font-family:var(--mono); font-variant-numeric:tabular-nums; }
+
+  /* root cards */
+  .roots { display:flex; flex-direction:column; gap:16px; }
+  .root { border:1px solid var(--line); border-left:4px solid var(--crit); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); padding:20px 24px; }
+  .root.p2 { border-left-color:var(--high); }
+  .root.p3 { border-left-color:var(--med); }
+  .root-head { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .root-rank { font-family:var(--mono); font-size:12px; font-weight:700; color:#fff; background:var(--crit); padding:2px 9px; border-radius:6px; letter-spacing:.03em; }
+  .root.p2 .root-rank { background:var(--high); } .root.p3 .root-rank { background:var(--med); }
+  .root h3 { margin:0; font-size:16px; color:var(--ink); }
+  .root p { margin:12px 0 0; font-size:14px; }
+  .root .where { margin-top:12px; font-family:var(--mono); font-size:12px; color:var(--ink-2); background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
+  .root .where b { color:var(--accent); }
+
+  /* wins */
+  .wins { display:grid; grid-template-columns:repeat(2,1fr); gap:10px 20px; margin-top:6px; }
+  @media (max-width:640px){ .wins{ grid-template-columns:1fr; } }
+  .win { display:flex; gap:10px; align-items:flex-start; font-size:14px; color:var(--ink-2); }
+  .win .tick { color:var(--v-exc); font-weight:800; flex:none; }
+
+  /* callout */
+  .callout { border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:var(--radius); background:var(--accent-soft); padding:18px 22px; margin-top:20px; }
+  .callout p { margin:0; color:var(--ink); font-size:15px; }
+  .callout p + p { margin-top:8px; }
+
+  footer { padding:30px 0 60px; color:var(--ink-3); font-size:13px; font-family:var(--mono); }
+  .kbd { font-family:var(--mono); font-size:.92em; background:var(--surface-2); border:1px solid var(--line); border-radius:5px; padding:1px 6px; color:var(--ink-2); }
+
+  .verd.exc { background:var(--v-exc); }
+  .verd.weak { background:var(--v-weak); }
+</style>
+
+<header>
+  <div class="wrap head-inner">
+    <div class="eyebrow">DreamBiz QA · Полный прогон · Q3</div>
+    <h1>Q3 — Service-агентство (cold start): полный прогон</h1>
+    <p class="sub">Кейс Q3 — «service micro-agency» в Бразилии (BRL): пользователю 28 лет, идеи нет, предпринимательского опыта нет, капитал не указан, контекст минимальный. Тест на то, как движок обращается с пустотой и неопределённостью через все три стадии — Idea Card, Business Plan, Presentation.</p>
+    <div class="meta-row">
+      <span><b>Дата:</b> 2026-07-14</span>
+      <span><b>Кейс:</b> Q3 · Бразилия / BRL</span>
+      <span><b>Стадий:</b> 3</span>
+      <span><b>Вход:</b> «пустой» (без идеи, без опыта, без капитала)</span>
+    </div>
+
+    <div class="verdict-banner">
+      <div class="vb-score">
+        <div class="big">59%</div>
+        <div class="label">Итог по 3 стадиям</div>
+        <div class="vb-tag">Удовлетворительно</div>
+      </div>
+      <div class="vb-text">
+        <p><strong>Лучшая карточка всего прогона (83%) съедается качеством downstream-стадий.</strong> Idea Card эталонно обработала пустой вход — задала уточняющий вопрос вместо того, чтобы выдумать founder-данные, уважила отсутствие опыта и капитала, дала реалистичную стартовую идею. Это доказывает: движок сильнее всего именно тогда, когда сам держит согласованность, без конфликта с входными данными фаундера.</p>
+        <p>Но Business Plan (59%) и Presentation (49%) размывают эту силу: первое появление протёкших hex-кодов в тексте Summary, «undefined» в тарифах, cash-flow в USD вместо BRL, SOM = revenue вместо доли от SAM. Q3 — лучший ИТОГОВЫЙ кейс всего прогона и второй лучший из всех четырёх, но здесь же — самый крутой обвал card→deck (83 → 49).</p>
+      </div>
+    </div>
+
+    <div class="scorestrip">
+      <div class="ss-cell"><div class="ss-q">Карточка</div><div class="ss-num" style="color:var(--v-exc)">83</div><div class="ss-desc">Idea Card · лучшая всего прогона</div></div>
+      <div class="ss-cell"><div class="ss-q">Business Plan</div><div class="ss-num" style="color:var(--v-sat)">59</div><div class="ss-desc">8/8 секций, hex-leak + undefined</div></div>
+      <div class="ss-cell"><div class="ss-q">Презентация</div><div class="ss-num" style="color:var(--v-weak)">49</div><div class="ss-desc">USD-числа, TAM/SAM/SOM врозь</div></div>
+      <div class="ss-cell avg"><div class="ss-q">Overall</div><div class="ss-num">59</div><div class="ss-desc">лучший итог Q1–Q3, №2 из всех</div></div>
+      <div class="ss-cell"><div class="ss-q">Обвал</div><div class="ss-num" style="color:var(--crit)">−34</div><div class="ss-desc">card→deck, самый крутой в прогоне</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Три стадии</h2></div>
+    <p class="sec-desc">Один и тот же кейс — Idea Card, Business Plan, Presentation — по ключевым аспектам генерации. Карточка держит эталон, каждая следующая стадия теряет качество.</p>
+    <div class="matrix-scroll">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th>Аспект</th>
+            <th class="q">Карточка</th>
+            <th class="q">Business Plan</th>
+            <th class="q">Презентация</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>генерация</th>
+            <td class="q"><span class="chip fixed">✓ собралась</span></td>
+            <td class="q"><span class="chip fixed">✓ 8/8 секций</span></td>
+            <td class="q"><span class="chip ok">✓ собралась</span></td>
+          </tr>
+          <tr>
+            <th>работа с пустотой</th>
+            <td class="q"><span class="chip fixed">✓ уточн. вопрос</span></td>
+            <td class="q"><span class="chip ok">наследует карточку</span></td>
+            <td class="q"><span class="chip ok">наследует BP</span></td>
+          </tr>
+          <tr>
+            <th>валюта</th>
+            <td class="q"><span class="chip fixed">BRL ок</span></td>
+            <td class="q"><span class="chip broke">cash-flow в USD</span></td>
+            <td class="q"><span class="chip broke">forecast в USD</span></td>
+          </tr>
+          <tr>
+            <th>template / hex-leak</th>
+            <td class="q"><span class="chip na">—</span></td>
+            <td class="q"><span class="chip broke">#0880AE в Summary</span></td>
+            <td class="q"><span class="chip na">—</span></td>
+          </tr>
+          <tr>
+            <th>числовая согласованность</th>
+            <td class="q"><span class="chip ok">churn↔LTV сошлись</span></td>
+            <td class="q"><span class="chip broke">SOM = revenue (T3)</span></td>
+            <td class="q"><span class="chip broke">TAM/SAM/SOM врозь</span></td>
+          </tr>
+          <tr>
+            <th>честность</th>
+            <td class="q"><span class="chip fixed">✓ не выдумал founder</span></td>
+            <td class="q"><span class="chip ok">мастер-числа чище Q1/Q2</span></td>
+            <td class="q"><span class="chip flaky">нарратив ОК, числа тянут вниз</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span class="chip fixed">эталон / починено</span>
+      <span class="chip ok">корректно</span>
+      <span class="chip flaky">частично / погранично</span>
+      <span class="chip broke">сломано</span>
+      <span class="chip na">не применимо</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Разбор по стадиям</h2></div>
+    <p class="sec-desc">Балл, вердикт и ключевые находки на каждой из трёх стадий Q3.</p>
+
+    <div class="case">
+      <div class="case-head">
+        <div class="case-score" style="color:var(--v-exc)">83</div>
+        <div><p class="case-title">Idea Card<span>Service micro-agency · Бразилия · BRL · вход полностью пустой</span></p></div>
+        <div class="case-meta"><span class="verd exc">Отлично</span><br>≈83% · лучшая карточка прогона</div>
+      </div>
+      <div class="case-body">
+        <ul>
+          <li class="pos"><strong>Задал уточняющий вопрос вместо выдумывания founder-данных</strong> — на входе без опыта, идеи и капитала движок не стал галлюцинировать вводные, а честно уточнил у пользователя.</li>
+          <li class="pos"><strong>Уважил отсутствие опыта и капитала</strong>: дал реалистичную стартовую идею под уровень «нулевого» фаундера, не завысил ожидания.</li>
+          <li class="pos"><strong>Экономика внутри карточки согласована</strong>, валюта BRL чистая по всей карточке, churn↔LTV сходятся корректно.</li>
+          <li class="pos"><strong>Честный скоринг</strong> — оценка отражает реальное качество идеи, а не завышена искусственно.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="case-head">
+        <div class="case-score" style="color:var(--v-sat)">59</div>
+        <div><p class="case-title">Business Plan<span>8/8 секций сгенерировано · мастер-числа чище, чем в Q1/Q2</span></p></div>
+        <div class="case-meta"><span class="verd sat">Удовл.</span><br>≈59% · lvl sat</div>
+      </div>
+      <div class="case-body">
+        <ul>
+          <li class="neg"><strong>Hex-коды протекли в текст Summary</strong> (баг B7) — <span class="mono">#0880AE</span> / <span class="mono">#FF7171</span> оказались буквально в прозе, первое появление этого класса бага за весь прогон.</li>
+          <li class="neg"><strong>«undefined» в тарифных планах</strong> (баг B8) — рендер-баг, ломает читаемость pricing-секции.</li>
+          <li class="neg"><strong>Cash-flow таблица в USD вместо BRL</strong> — структурный узел cash-flow генерируется в валюте по умолчанию (USD), не наследует локальную валюту кейса.</li>
+          <li class="neg"><strong>SOM = revenue, а не доля от SAM</strong> — частичный провал теста согласованности T3 (TAM ⊇ SAM ⊇ SOM).</li>
+          <li class="pos"><strong>Мастер-числа заметно чище</strong>, чем в аналогичных BP по Q1/Q2 — качество растёт, несмотря на локальные баги.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="case-head">
+        <div class="case-score" style="color:var(--v-weak)">49</div>
+        <div><p class="case-title">Presentation<span>Нарратив держится, числовые/forecast-слайды тянут вниз</span></p></div>
+        <div class="case-meta"><span class="verd weak">Слабо</span><br>≈49% · lvl weak</div>
+      </div>
+      <div class="case-body">
+        <ul>
+          <li class="pos"><strong>Нарративная часть в порядке</strong> — текстовые слайды связные, идею не искажают.</li>
+          <li class="neg"><strong>Числовые и forecast-слайды в USD</strong> — та же проблема, что и в BP cash-flow, только теперь на слайдах, которые видит инвестор.</li>
+          <li class="neg"><strong>TAM/SAM/SOM несогласованы между слайдами</strong> — расхождение из BP переносится и усиливается в презентации.</li>
+          <li class="neg"><strong>Самый крутой обвал во всём прогоне</strong> — card→deck падение 83 → 49 (−34 п.п.), сильнее чем в Q1/Q2.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Корни</h2></div>
+    <p class="sec-desc">Три причины, которые сводят находки этого кейса воедино — от структурного бага генерации до архитектурного разрыва между стадиями.</p>
+    <div class="roots">
+
+      <div class="root">
+        <div class="root-head"><span class="root-rank">Приоритет 1</span><h3>Cash-flow узел генерируется в USD по умолчанию</h3></div>
+        <p>И в Business Plan, и в Presentation числовой/forecast-блок выходит в USD, хотя весь остальной кейс — включая эталонную Idea Card — держит BRL чисто. Это не протечка в отображении, а структурный узел генерации cash-flow, который не наследует локальную валюту кейса и, судя по всему, использует USD как валюту по умолчанию независимо от входа.</p>
+        <div class="where"><b>Где искать:</b> модуль построения cash-flow / forecast-таблиц в BP- и Presentation-пайплайнах — валюта не прокидывается из контекста кейса на этом узле.</div>
+      </div>
+
+      <div class="root p2">
+        <div class="root-head"><span class="root-rank">Приоритет 2</span><h3>Hex-код и template-протечки в текстовый рендер</h3></div>
+        <p>Business Plan показал первое появление буквальных hex-кодов (<span class="mono">#0880AE</span>, <span class="mono">#FF7171</span>) внутри прозы Summary и значения <span class="mono">undefined</span> в тарифных планах. Это класс рендер/шаблонных багов — стилевые токены или незаполненные переменные шаблона утекают в финальный текст вместо того, чтобы быть отфильтрованными на этапе сборки.</p>
+        <div class="where"><b>Фикс:</b> санитайзер вывода перед вставкой в текстовые поля — отлавливать hex-паттерны и <span class="mono">undefined</span>/<span class="mono">null</span> до рендера, а не полагаться на то, что шаблон никогда не сломается.</div>
+      </div>
+
+      <div class="root p3">
+        <div class="root-head"><span class="root-rank">Приоритет 3</span><h3>Downstream-стадии не наследуют качество карточки</h3></div>
+        <p>Q3 — лучшее доказательство архитектурного разрыва: карточка (83%, эталон работы с пустотой) генерируется независимо от BP и Presentation, и её сила не передаётся дальше. Именно здесь обвал card→deck (83→49, −34 п.п.) самый крутой во всём прогоне — притом что карточка была лучшей. Согласованность, которую движок продемонстрировал на уровне карточки, не используется как ограничение при построении BP/Presentation.</p>
+        <div class="where"><b>Фикс:</b> BP и Presentation должны валидироваться и/или регенерироваться против уже согласованных чисел карточки, а не пересчитывать метрики с нуля на каждой стадии.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>Вывод</h2></div>
+    <p class="sec-desc">Что этот кейс говорит о готовности движка в целом.</p>
+    <div class="callout">
+      <p><strong>Q3 — лучший итоговый кейс прогона (Q1–Q3) и второй лучший из всех четырёх</strong> — во многом благодаря эталонной обработке пустого входа на уровне карточки: уточняющий вопрос вместо выдумки, уважение к отсутствию опыта и капитала, честная и согласованная экономика.</p>
+      <p>Но именно на этом кейсе виден потолок текущей архитектуры отчётливее всего: <strong>обвал card→deck здесь самый крутой (83→49, −34 п.п.)</strong> из всего прогона. Причины — cash-flow в USD по умолчанию, hex/template-протечки в тексте, SOM=revenue — все три носят характер render/структурных багов, а не концептуальных провалов модели.</p>
+      <p><strong>Вывод:</strong> движок умеет держать согласованность идеально, когда считает сам (карточка). Задача — перенести эту дисциплину на BP и Presentation через наследование чисел карточки и санитайзер вывода, а не давать этим стадиям заново изобретать (и портить) уже решённую экономику.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  DreamBiz QA-kit · Полный прогон Q3 · 2026-07-14 · 3 стадии (Idea Card → Business Plan → Presentation)<br>
+  Переключение темы — тумблер <span class="kbd">◐</span> в интерфейсе просмотра.
+</footer>

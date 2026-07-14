@@ -1,0 +1,414 @@
+<title>DreamBiz QA — Q4 полный прогон: Карточка → BP → Презентация</title>
+<style>
+  :root {
+    --bg:#f4f6f9; --surface:#ffffff; --surface-2:#eef1f6;
+    --ink:#16202e; --ink-2:#4a586b; --ink-3:#8695a8; --line:#dce2eb;
+    --accent:#3f4fd6; --accent-soft:#eaecfb;
+
+    --crit:#d13b3b; --crit-bg:#fbeaea; --high:#d1811f; --high-bg:#fbf1e2;
+    --med:#2f6fd1; --med-bg:#e7eefb; --low:#5a7d6b; --low-bg:#e9f1ec;
+
+    --v-exc:#1f9d63; --v-good:#6aa02a; --v-sat:#c99700; --v-weak:#d1811f; --v-unacc:#d13b3b;
+
+    /* regression status */
+    --st-fixed:#1f9d63; --st-fixed-bg:#e6f4ec;
+    --st-ok:#2f6fd1;    --st-ok-bg:#e7eefb;
+    --st-flaky:#c99700; --st-flaky-bg:#faf3dc;
+    --st-broke:#d13b3b; --st-broke-bg:#fbeaea;
+    --st-imp:#5a7d6b;   --st-imp-bg:#e9f1ec;
+
+    --radius:12px;
+    --shadow: 0 1px 2px rgba(22,32,46,.05), 0 4px 16px rgba(22,32,46,.06);
+    --maxw:1120px;
+    --sans:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono:ui-monospace, "SF Mono", "JetBrains Mono", "Menlo", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#0e131b; --surface:#161d28; --surface-2:#1d2633;
+      --ink:#e8edf4; --ink-2:#a7b4c5; --ink-3:#6d7c90; --line:#2a3543;
+      --accent:#8b97f5; --accent-soft:#232a45;
+      --crit:#f0736f; --crit-bg:#2e1a1c; --high:#e8a94e; --high-bg:#2c2317;
+      --med:#6ea3ef; --med-bg:#182333; --low:#82ab93; --low-bg:#172219;
+      --v-exc:#46c489; --v-good:#8fc74e; --v-sat:#e0b93a; --v-weak:#e8a94e; --v-unacc:#f0736f;
+      --st-fixed:#46c489; --st-fixed-bg:#132a1f; --st-ok:#6ea3ef; --st-ok-bg:#152131;
+      --st-flaky:#e0b93a; --st-flaky-bg:#2a2413; --st-broke:#f0736f; --st-broke-bg:#2e1a1c;
+      --st-imp:#82ab93; --st-imp-bg:#172219;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 20px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg:#f4f6f9; --surface:#ffffff; --surface-2:#eef1f6; --ink:#16202e; --ink-2:#4a586b; --ink-3:#8695a8; --line:#dce2eb;
+    --accent:#3f4fd6; --accent-soft:#eaecfb;
+    --crit:#d13b3b; --crit-bg:#fbeaea; --high:#d1811f; --high-bg:#fbf1e2; --med:#2f6fd1; --med-bg:#e7eefb; --low:#5a7d6b; --low-bg:#e9f1ec;
+    --v-exc:#1f9d63; --v-good:#6aa02a; --v-sat:#c99700; --v-weak:#d1811f; --v-unacc:#d13b3b;
+    --st-fixed:#1f9d63; --st-fixed-bg:#e6f4ec; --st-ok:#2f6fd1; --st-ok-bg:#e7eefb;
+    --st-flaky:#c99700; --st-flaky-bg:#faf3dc; --st-broke:#d13b3b; --st-broke-bg:#fbeaea; --st-imp:#5a7d6b; --st-imp-bg:#e9f1ec;
+    --shadow: 0 1px 2px rgba(22,32,46,.05), 0 4px 16px rgba(22,32,46,.06);
+  }
+  :root[data-theme="dark"] {
+    --bg:#0e131b; --surface:#161d28; --surface-2:#1d2633; --ink:#e8edf4; --ink-2:#a7b4c5; --ink-3:#6d7c90; --line:#2a3543;
+    --accent:#8b97f5; --accent-soft:#232a45;
+    --crit:#f0736f; --crit-bg:#2e1a1c; --high:#e8a94e; --high-bg:#2c2317; --med:#6ea3ef; --med-bg:#182333; --low:#82ab93; --low-bg:#172219;
+    --v-exc:#46c489; --v-good:#8fc74e; --v-sat:#e0b93a; --v-weak:#e8a94e; --v-unacc:#f0736f;
+    --st-fixed:#46c489; --st-fixed-bg:#132a1f; --st-ok:#6ea3ef; --st-ok-bg:#152131;
+    --st-flaky:#e0b93a; --st-flaky-bg:#2a2413; --st-broke:#f0736f; --st-broke-bg:#2e1a1c; --st-imp:#82ab93; --st-imp-bg:#172219;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 20px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+  a { color:var(--accent); }
+
+  /* header */
+  header { border-bottom:1px solid var(--line); background:linear-gradient(180deg, var(--surface), var(--bg)); }
+  .head-inner { padding:40px 0 30px; }
+  .eyebrow { font-family:var(--mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; }
+  h1 { font-size:clamp(27px,4vw,40px); line-height:1.08; margin:10px 0 8px; letter-spacing:-.02em; text-wrap:balance; font-weight:800; }
+  .sub { color:var(--ink-2); font-size:16px; max-width:64ch; }
+  .meta-row { display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:18px; font-size:13px; color:var(--ink-3); font-family:var(--mono); }
+  .meta-row b { color:var(--ink-2); font-weight:600; }
+
+  /* verdict banner */
+  .verdict-banner { margin-top:24px; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); overflow:hidden; display:grid; grid-template-columns:minmax(210px,250px) 1fr; }
+  @media (max-width:760px){ .verdict-banner{ grid-template-columns:1fr; } }
+  .vb-score { padding:26px 28px; display:flex; flex-direction:column; justify-content:center; gap:4px; border-right:1px solid var(--line); background:color-mix(in srgb, var(--v-sat) 9%, var(--surface)); }
+  @media (max-width:760px){ .vb-score{ border-right:0; border-bottom:1px solid var(--line); } }
+  .vb-score .big { font-family:var(--mono); font-size:52px; font-weight:700; line-height:1; color:var(--v-sat); font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+  .vb-score .label { font-size:13px; color:var(--ink-2); }
+  .vb-tag { align-self:flex-start; margin-top:8px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#fff; background:var(--v-sat); padding:3px 10px; border-radius:999px; }
+  .vb-text { padding:24px 28px; }
+  .vb-text p { margin:0 0 10px; color:var(--ink-2); font-size:15px; }
+  .vb-text p:last-child { margin-bottom:0; }
+  .vb-text strong { color:var(--ink); }
+
+  /* case score strip */
+  .scorestrip { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:16px; }
+  @media (max-width:760px){ .scorestrip{ grid-template-columns:repeat(2,1fr); } }
+  .ss-cell { border:1px solid var(--line); border-radius:10px; background:var(--surface); padding:14px 16px; box-shadow:var(--shadow); }
+  .ss-cell.avg { background:var(--accent-soft); border-color:color-mix(in srgb,var(--accent) 30%, var(--line)); }
+  .ss-q { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); }
+  .ss-num { font-family:var(--mono); font-size:30px; font-weight:700; line-height:1.05; margin-top:4px; font-variant-numeric:tabular-nums; }
+  .ss-desc { font-size:12px; color:var(--ink-2); margin-top:3px; }
+  .ss-cell.avg .ss-num { color:var(--accent); }
+
+  /* section scaffold */
+  section { padding:40px 0; border-bottom:1px solid var(--line); }
+  .sec-head { display:flex; align-items:baseline; gap:14px; margin-bottom:8px; }
+  .sec-num { font-family:var(--mono); font-size:13px; color:var(--accent); font-weight:700; letter-spacing:.05em; }
+  h2 { font-size:22px; margin:0; letter-spacing:-.01em; font-weight:750; }
+  .sec-desc { color:var(--ink-2); font-size:14px; margin:0 0 22px; max-width:74ch; }
+  h3 { font-size:16px; margin:26px 0 10px; letter-spacing:-.005em; }
+  p { font-size:15px; color:var(--ink-2); }
+  p strong, li strong { color:var(--ink); }
+
+  /* regression matrix */
+  .matrix-scroll { overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); background:var(--surface); }
+  table.matrix { border-collapse:collapse; width:100%; min-width:720px; font-size:13px; }
+  table.matrix th, table.matrix td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:middle; }
+  table.matrix thead th { position:sticky; top:0; background:var(--surface-2); font-size:12px; letter-spacing:.03em; color:var(--ink-2); font-weight:700; }
+  table.matrix thead th.q { font-family:var(--mono); text-align:center; width:132px; }
+  table.matrix tbody th { font-weight:600; color:var(--ink); width:230px; }
+  table.matrix td.q { text-align:center; }
+  table.matrix tbody tr:last-child td, table.matrix tbody tr:last-child th { border-bottom:0; }
+  table.matrix tbody tr:hover td, table.matrix tbody tr:hover th { background:color-mix(in srgb,var(--accent) 4%, transparent); }
+
+  .chip { display:inline-flex; align-items:center; gap:5px; font-family:var(--mono); font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; letter-spacing:.02em; white-space:nowrap; }
+  .chip.fixed { color:var(--st-fixed); background:var(--st-fixed-bg); }
+  .chip.ok    { color:var(--st-ok);    background:var(--st-ok-bg); }
+  .chip.flaky { color:var(--st-flaky); background:var(--st-flaky-bg); }
+  .chip.broke { color:var(--st-broke); background:var(--st-broke-bg); }
+  .chip.imp   { color:var(--st-imp);   background:var(--st-imp-bg); }
+  .chip.na    { color:var(--ink-3);    background:var(--surface-2); }
+  .cell-note { display:block; font-size:11px; color:var(--ink-3); margin-top:3px; font-family:var(--mono); text-align:center; }
+  .verdict-col { font-family:var(--mono); font-size:11px; font-weight:700; }
+
+  .legend { display:flex; flex-wrap:wrap; gap:8px 14px; margin-top:14px; font-size:12px; color:var(--ink-2); }
+  .legend .chip { font-size:10px; }
+
+  /* case cards */
+  .case { border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); margin-top:16px; overflow:hidden; }
+  .case-head { display:grid; grid-template-columns:64px 1fr auto; gap:16px; align-items:center; padding:18px 22px; border-bottom:1px solid var(--line); background:var(--surface-2); }
+  .case-score { font-family:var(--mono); font-size:30px; font-weight:700; line-height:1; text-align:center; font-variant-numeric:tabular-nums; }
+  .case-title { font-size:16px; font-weight:700; margin:0; }
+  .case-title span { display:block; font-weight:400; font-size:13px; color:var(--ink-2); margin-top:2px; }
+  .case-meta { font-family:var(--mono); font-size:11px; color:var(--ink-3); text-align:right; }
+  .verd { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:3px 9px; border-radius:999px; color:#fff; display:inline-block; }
+  .verd.good { background:var(--v-good); } .verd.sat { background:var(--v-sat); }
+  .case-body { padding:18px 22px; }
+  .case-body ul { margin:0; padding-left:0; list-style:none; display:flex; flex-direction:column; gap:9px; }
+  .case-body li { font-size:14px; color:var(--ink-2); padding-left:22px; position:relative; }
+  .case-body li::before { content:""; position:absolute; left:4px; top:8px; width:7px; height:7px; border-radius:2px; }
+  .case-body li.pos::before { background:var(--v-exc); }
+  .case-body li.neg::before { background:var(--crit); }
+  .case-body li.mid::before { background:var(--high); }
+  .mono { font-family:var(--mono); font-variant-numeric:tabular-nums; }
+
+  /* root cards */
+  .roots { display:flex; flex-direction:column; gap:16px; }
+  .root { border:1px solid var(--line); border-left:4px solid var(--crit); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); padding:20px 24px; }
+  .root.p2 { border-left-color:var(--high); }
+  .root.p3 { border-left-color:var(--med); }
+  .root-head { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .root-rank { font-family:var(--mono); font-size:12px; font-weight:700; color:#fff; background:var(--crit); padding:2px 9px; border-radius:6px; letter-spacing:.03em; }
+  .root.p2 .root-rank { background:var(--high); } .root.p3 .root-rank { background:var(--med); }
+  .root h3 { margin:0; font-size:16px; color:var(--ink); }
+  .root p { margin:12px 0 0; font-size:14px; }
+  .root .where { margin-top:12px; font-family:var(--mono); font-size:12px; color:var(--ink-2); background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
+  .root .where b { color:var(--accent); }
+
+  /* wins */
+  .wins { display:grid; grid-template-columns:repeat(2,1fr); gap:10px 20px; margin-top:6px; }
+  @media (max-width:640px){ .wins{ grid-template-columns:1fr; } }
+  .win { display:flex; gap:10px; align-items:flex-start; font-size:14px; color:var(--ink-2); }
+  .win .tick { color:var(--v-exc); font-weight:800; flex:none; }
+
+  /* callout */
+  .callout { border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:var(--radius); background:var(--accent-soft); padding:18px 22px; margin-top:20px; }
+  .callout p { margin:0; color:var(--ink); font-size:15px; }
+  .callout p + p { margin-top:8px; }
+
+  footer { padding:30px 0 60px; color:var(--ink-3); font-size:13px; font-family:var(--mono); }
+  .kbd { font-family:var(--mono); font-size:.92em; background:var(--surface-2); border:1px solid var(--line); border-radius:5px; padding:1px 6px; color:var(--ink-2); }
+
+  /* appended for this report */
+  .ss-cell .ss-num.good { color:var(--v-good); }
+  .ss-cell .ss-num.sat { color:var(--v-sat); }
+</style>
+
+<header>
+  <div class="wrap head-inner">
+    <div class="eyebrow">DreamBiz QA · Полный прогон · Q4</div>
+    <h1>Q4 — AI fire-safety compliance: полный прогон</h1>
+    <p class="sub">Единственный кейс прогона, доведённый через все три стадии — Idea Card → Business Plan → Presentation. B2B enterprise SaaS для проверки строительной пожарной документации против DIN/MBO norms (Германия, EUR, deep-tech). Команда: CTO 10+ лет AI/ML + со-фаундер ex-VP Sales enterprise SaaS, запрошено €200K pre-seed.</p>
+    <div class="meta-row">
+      <span><b>Дата:</b> 2026-07-14</span>
+      <span><b>Кейс:</b> Q4 · Германия / EUR</span>
+      <span><b>Стадий:</b> 3 (Card → BP → Presentation)</span>
+      <span><b>Ниша:</b> deep-tech B2B SaaS (DIN/MBO compliance)</span>
+    </div>
+
+    <div class="verdict-banner">
+      <div class="vb-score">
+        <div class="big">62<span style="font-size:24px">%</span></div>
+        <div class="label">Overall по трём стадиям</div>
+        <div class="vb-tag">Удовлетворительно</div>
+      </div>
+      <div class="vb-text">
+        <p><strong>Лучший overall-кейс всего прогона.</strong> Среднее 60/71/60 минус ~2пп штрафа за межстадийные рассинхроны даёт ≈62%. Business Plan (71%, «Хорошо») — лучший BP всего прогона: risks-секция, персоны и мастер-слой инвестиций держатся безупречно. Карточка (60%) — самая низкая карточка прогона из-за founder-override (B6), Презентация (60%) — сильный нарратив, но обвал финансовых слайдов.</p>
+        <p>Главный вывод кейса: почти все «фантазийные числа» этого прогона — это <strong>рендер-баги</strong> (×100 churn, ÷100 pricing, ×1000 cash-flow, знаковая инверсия forecast), а не логические ошибки движка. Мастер-слой (BP Summary) держит корректный EUR; ломаются конкретные узлы отображения. Enterprise / single-currency EUR вход дал движку лучшую связность всего прогона.</p>
+      </div>
+    </div>
+
+    <div class="scorestrip">
+      <div class="ss-cell"><div class="ss-q">Карточка</div><div class="ss-num sat">60</div><div class="ss-desc">Founder-override B6, ×100 churn render</div></div>
+      <div class="ss-cell"><div class="ss-q">Business Plan</div><div class="ss-num good">71</div><div class="ss-desc">Лучший BP прогона · Risks + мастер-слой</div></div>
+      <div class="ss-cell"><div class="ss-q">Презентация</div><div class="ss-num sat">60</div><div class="ss-desc">Лучший нарратив, обвал financial-слайдов</div></div>
+      <div class="ss-cell avg"><div class="ss-q">Overall</div><div class="ss-num">62</div><div class="ss-desc">Лучший overall-кейс прогона</div></div>
+      <div class="ss-cell"><div class="ss-q">Штраф</div><div class="ss-num" style="color:var(--ink-3)">−2пп</div><div class="ss-desc">межстадийные рассинхроны валют/знака</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Три стадии</h2></div>
+    <p class="sec-desc">Один и тот же кейс — Card, BP и Presentation генерируются из общего мастер-слоя, но каждая стадия рендерит числа своим узлом. Таблица показывает, где узлы держат мастер-значение, а где расходятся.</p>
+    <div class="matrix-scroll">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th>Аспект</th>
+            <th class="q">Карточка</th>
+            <th class="q">Business Plan</th>
+            <th class="q">Презентация</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>генерация</th>
+            <td class="q"><span class="chip fixed">✓ без падений</span></td>
+            <td class="q"><span class="chip fixed">✓ без падений</span></td>
+            <td class="q"><span class="chip fixed">✓ без падений</span></td>
+          </tr>
+          <tr>
+            <th>валюта</th>
+            <td class="q"><span class="chip ok">EUR чисто</span></td>
+            <td class="q"><span class="chip broke">cash-flow USD</span><span class="cell-note">Summary EUR</span></td>
+            <td class="q"><span class="chip broke">forecast USD</span><span class="cell-note">narrative EUR</span></td>
+          </tr>
+          <tr>
+            <th>churn ×100 render</th>
+            <td class="q"><span class="chip broke">«69%»</span><span class="cell-note">true 0.69%/мес</span></td>
+            <td class="q"><span class="chip ok">T2/T4/T5 pass</span><span class="cell-note">LTV:CAC 14.1:1 валиден</span></td>
+            <td class="q"><span class="chip na">—</span></td>
+          </tr>
+          <tr>
+            <th>founder-override B6</th>
+            <td class="q"><span class="chip broke">GM/CAC/churn переписаны</span></td>
+            <td class="q"><span class="chip na">—</span></td>
+            <td class="q"><span class="chip na">—</span></td>
+          </tr>
+          <tr>
+            <th>required = peak (B4)</th>
+            <td class="q"><span class="chip broke">€95K vs €1.4M</span></td>
+            <td class="q"><span class="chip flaky">честно вскрыт</span><span class="cell-note">payback 71 мес.</span></td>
+            <td class="q"><span class="chip na">—</span></td>
+          </tr>
+          <tr>
+            <th>template / hex / foreign-leak</th>
+            <td class="q"><span class="chip ok">чисто</span></td>
+            <td class="q"><span class="chip broke">[/color]×4, #0880AE, AAAA/BBBB/CCCC</span></td>
+            <td class="q"><span class="chip broke">market-template mismatch</span></td>
+          </tr>
+          <tr>
+            <th>знаковая инверсия forecast</th>
+            <td class="q"><span class="chip na">—</span></td>
+            <td class="q"><span class="chip ok">+€2.8M кумулятивно</span></td>
+            <td class="q"><span class="chip broke">−$3.3M растущий убыток</span></td>
+          </tr>
+          <tr>
+            <th>честность движка</th>
+            <td class="q"><span class="chip flaky">net −3.5% честно</span></td>
+            <td class="q"><span class="chip fixed">B4 payback вскрыт</span></td>
+            <td class="q"><span class="chip flaky">self-score Fair 49</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span class="chip fixed">корректно / не падает</span>
+      <span class="chip ok">валидно в узле</span>
+      <span class="chip flaky">частично / честно вскрыто</span>
+      <span class="chip broke">сломано</span>
+      <span class="chip na">не применимо</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Разбор по стадиям</h2></div>
+    <p class="sec-desc">Полная детализация находок на каждой стадии. Business Plan получает наиболее подробный разбор — это самый сильный артефакт кейса и всего прогона.</p>
+
+    <div class="case">
+      <div class="case-head">
+        <div class="case-score" style="color:var(--v-sat)">60</div>
+        <div><p class="case-title">Idea Card<span>AI fire-safety compliance (DIN MB) · самая низкая карточка прогона</span></p></div>
+        <div class="case-meta"><span class="verd sat">Удовл.</span><br>≈60% · lvl sat</div>
+      </div>
+      <div class="case-body">
+        <ul>
+          <li class="neg"><strong>Founder-override (баг B6)</strong> — движок переписал все 3 заданных фаундером числа (gross margin, CAC, churn) и пересчитал экономику своими дефолтами. Единственный кейс прогона с полным override — отсюда и просадка карточки.</li>
+          <li class="neg"><strong>churn «69%»</strong> — рендер-баг ×100: истинное значение <span class="mono">0.69%/мес</span> (≈8%/год), нормально для enterprise SaaS. Отображение сломано, не экономика.</li>
+          <li class="pos"><strong>LTV €313K и LTV:CAC 14.1:1 математически валидны</strong> — оба посчитаны против корректного <span class="mono">0.69%</span>, просто дисплей churn искажает восприятие числа.</li>
+          <li class="neg"><strong>€200K pre-seed проигнорирован</strong>: требуемая сумма движком выставлена как <span class="mono">€95K</span>, при этом пиковый разрыв капитала (peak capital draw) — <span class="mono">€1.4M</span>. Комбинация B6 (override экономики) + B4 (required ≠ peak) — required занижен в 14.7 раза относительно реальной потребности.</li>
+          <li class="pos"><strong>Deep-tech ниша не упрощена</strong>: DIN/MBO нормы, fire-safety domain, enterprise scope удержаны на экспертном уровне.</li>
+          <li class="pos"><strong>Net −3.5%</strong> — честно показан слабый, но некатастрофический ранний убыток, не выдумано благополучие.</li>
+          <li class="pos"><strong>EUR чистая на карточке</strong> — ни одного $-протекания в отображении.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="case-head">
+        <div class="case-score" style="color:var(--v-good)">71</div>
+        <div><p class="case-title">Business Plan<span>AI fire-safety compliance (DIN MB) · лучший BP всего прогона</span></p></div>
+        <div class="case-meta"><span class="verd good">Хорошо</span><br>≈71% · lvl good</div>
+      </div>
+      <div class="case-body">
+        <ul>
+          <li class="pos"><strong>Risks — сильнейшая секция прогона</strong>: 9 внешних рисков, у каждого mitigation + contingency + triggers, плюс полный SWOT и risk-матрица. Ничего подобного по глубине в других кейсах нет.</li>
+          <li class="pos"><strong>Мастер-слой инвестиций безупречен</strong>: One-Time investment <span class="mono">€95K</span> раскладывается <span class="mono">18+32+15+12+18=95</span>, Operational <span class="mono">€725K</span> — <span class="mono">312+222+84+66+41=725</span>. Обе суммы сходятся до евро.</li>
+          <li class="pos"><strong>Персоны — самые глубокие прогона</strong>: Lena, Thomas, Sabine прописаны детально, с ролями и болями, привязанными к продукту.</li>
+          <li class="pos"><strong>T2/T4/T5 PASS</strong> — первая по-настоящему здоровая unit-экономика во всём прогоне (churn «69%» — только рендер, LTV:CAC 14.1x валиден).</li>
+          <li class="pos"><strong>B4 честно раскрыт</strong>: явно написано «Payback 71 месяцев», «Negative early margin» — движок не прячет слабую экономику раннего этапа.</li>
+          <li class="neg"><strong>T1 FAIL</strong>: cash-flow таблица в USD (<span class="mono">$-849,000.00K</span>) против мастер-значения EUR (<span class="mono">€1,152,000</span>) — структурный узел валюты, не логическая ошибка.</li>
+          <li class="neg"><strong>T3 частичный FAIL</strong> (−10пп): SOM представлен как выручка 4-го года, а не как доля от SAM (%) — смешение метрик.</li>
+          <li class="neg"><strong>Рендер-мусор</strong>: <span class="mono">[/color]</span>×4 в секции Plan, сырой hex <span class="mono">#0880AE / #FF7171</span> в Summary, «Price not available»×4 в заголовках тарифов продукта (при этом в теле корректные <span class="mono">€18K / €36K</span>), плейсхолдер-иконки <span class="mono">AAAA/BBBB/CCCC</span>, немецкие заголовки таблиц (Wachstumsphase и т.п.), пустая строка «monthly fixed costs of ,».</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="case-head">
+        <div class="case-score" style="color:var(--v-sat)">60</div>
+        <div><p class="case-title">Presentation<span>AI fire-safety compliance (DIN MB) · лучший нарратив, обвал финансовых слайдов</span></p></div>
+        <div class="case-meta"><span class="verd sat">Удовл.</span><br>≈60% · lvl sat</div>
+      </div>
+      <div class="case-body">
+        <ul>
+          <li class="pos"><strong>Слайды 1–8 — лучший нарратив прогона</strong>: Title → Agenda → Problem → Audience → Why now → Built for Compliance → Positioning → Revenue Streams, где Project Team €18K / Portfolio Ops €36K согласуются с BP. Roadmap тоже консистентен.</li>
+          <li class="neg"><strong>3-Year Forecast в USD</strong>: Revenue показан как <span class="mono">$23.4K / $297K / $648K</span> вместо EUR мастер-слоя.</li>
+          <li class="neg"><strong>Gross Profit отрицательный</strong> (<span class="mono">−$648K</span>) при заявленной GM <span class="mono">72%</span> — арифметически невозможная комбинация.</li>
+          <li class="neg"><strong>Знаковая инверсия Total Revenue Outlook</strong>: <span class="mono">−$1.5M / −$2.1M / −$3.3M</span> (растущий отрицательный тренд), тогда как BP Summary даёт кумулятивный <span class="mono">+€2.8M</span> — прямая инверсия знака между стадиями, не просто другая валюта.</li>
+          <li class="neg"><strong>«Key Metrics of Unit Economics» — template mismatch</strong>: слайд с этим заголовком показывает generic market-числа <span class="mono">$15B / $3.5B / $500M</span>, вместо unit-экономики. Противоречит согласованным <span class="mono">€36K/€60K/€18K</span> и <span class="mono">€725K/€820K/€2.8M</span> на других слайдах — похоже на вставку из чужого шаблона.</li>
+          <li class="neg"><strong>SAM/TAM/SOM перепутаны местами</strong> на двух слайдах — метки применены не туда.</li>
+          <li class="mid"><strong>Движок сам оценил дек</strong>: self-score «Fair 49» — низкая внутренняя оценка совпадает с QA-находками.</li>
+          <li class="mid"><strong>Хаотичная нумерация страниц</strong>: «05» повторяется на трёх разных слайдах.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Корни</h2></div>
+    <p class="sec-desc">Находки трёх стадий сводятся к небольшому числу причин на уровне движка — важно то, что бо́льшая часть дефектов локализована в слое рендера/форматирования, а не в бизнес-логике расчётов.</p>
+    <div class="roots">
+
+      <div class="root">
+        <div class="root-head"><span class="root-rank">Приоритет 1</span><h3>Числовой форматтер ломает отображение корректных значений</h3></div>
+        <p>Один и тот же класс дефекта проявляется в разных узлах: <span class="mono">×100</span> на churn карточки («69%» вместо 0.69%), <span class="mono">÷100</span>-подобный сдвиг на pricing-заголовках BP («Price not available» при корректном теле), <span class="mono">×1000</span> на cash-flow BP (<span class="mono">$-849,000.00K</span>), знаковая инверсия на forecast-слайдах презентации (<span class="mono">−$3.3M</span> вместо <span class="mono">+€2.8M</span>). Во всех случаях мастер-слой (BP Summary) остаётся корректным — расходится именно узел, который берёт число и рендерит его в конкретный виджет/таблицу/слайд.</p>
+        <div class="where"><b>Фикс:</b> unit-тест на каждый рендер-узел — сверка отображаемого значения с мастер-значением до умножения на 100/1000 и до применения знака; так же перепроверить схожие «фантазийные числа» в Q1–Q3 — велика вероятность, что это тот же баг форматтера, а не логическая ошибка расчёта.</p>
+      </div>
+
+      <div class="root p2">
+        <div class="root-head"><span class="root-rank">Приоритет 2</span><h3>Структурный USD-узел в cash-flow / forecast</h3></div>
+        <p>Cash-flow таблица BP (T1) и 3-Year Forecast презентации рендерятся в USD независимо от того, что мастер-слой Summary и весь остальной BP — в EUR. Это не одиночная опечатка, а отдельный вычислительный узел, который, похоже, всегда работает в USD и не получает сигнал валюты кейса.</p>
+        <div class="where"><b>Где искать:</b> код, который строит cash-flow projection и financial forecast для презентации — по всей видимости, использует захардкоженную/дефолтную валюту вместо валюты, переданной в остальной pipeline (та же архитектурная зона, что и USD-утечка из бейслайн-прогона Q1–Q4).</p>
+      </div>
+
+      <div class="root p3">
+        <div class="root-head"><span class="root-rank">Приоритет 3</span><h3>Founder-override (B6) и required ≠ peak (B4)</h3></div>
+        <p>На карточке движок полностью переписал 3 заданных фаундером входа (GM, CAC, churn) своими дефолтами — единственный такой случай в прогоне — и не учёл заявленный бюджет €200K, выставив required €95K при реальном пиковом разрыве капитала €1.4M. Это логическая, не рендерная, проблема: значения были заменены до расчёта, а не искажены при отображении.</p>
+        <div class="where"><b>Фикс:</b> явный guard — founder-input, если предоставлен, должен побеждать дефолт движка либо явно помечаться как «скорректировано движком» с обоснованием; required investment должен вычисляться как максимум кумулятивного денежного разрыва (peak capital draw), а не независимая оценка.</div>
+      </div>
+
+      <div class="root p3">
+        <div class="root-head"><span class="root-rank">Приоритет 4</span><h3>Template-контаминация и leak-санитайзер</h3></div>
+        <p>BP несёт разметочный мусор (<span class="mono">[/color]</span>×4, сырые hex-коды <span class="mono">#0880AE/#FF7171</span>, плейсхолдер-иконки <span class="mono">AAAA/BBBB/CCCC</span>, немецкие заголовки таблиц), а презентация — целый слайд из другого шаблона («Key Metrics of Unit Economics» с generic market-числами). Признак недостаточной пост-обработки/санитайзинга вывода перед финальной сборкой документа.</p>
+        <div class="where"><b>Фикс:</b> санитайзер на выходе — стрип markup-артефактов, проверка hex/цветовых токенов, cross-check заголовка слайда против типа содержимого (unit-economics vs market-sizing), локаль таблиц под язык кейса.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>Что уже работает</h2></div>
+    <p class="sec-desc">Q4 — не просто «ещё один кейс с багами»: это кейс, который показал, на что движок способен при благоприятных условиях (enterprise, единая валюта, чёткая ниша).</p>
+    <div class="wins">
+      <div class="win"><span class="tick">✓</span><span><strong>Deep-tech ниша не упрощена</strong> — DIN/MBO normы, fire-safety compliance, traceability и remediation workflow удержаны на экспертном уровне на всех трёх стадиях.</span></div>
+      <div class="win"><span class="tick">✓</span><span><strong>Мастер-слой инвестиций сходится до евро</strong> — One-Time €95K (18+32+15+12+18) и Operational €725K (312+222+84+66+41) оба точно суммируются.</span></div>
+      <div class="win"><span class="tick">✓</span><span><strong>T2/T4/T5 PASS</strong> — первая по-настоящему здоровая unit-экономика прогона; LTV:CAC 14.1x валиден при корректном churn.</span></div>
+      <div class="win"><span class="tick">✓</span><span><strong>Лучший нарратив-дек прогона</strong> — 8 слайдов подряд согласованы друг с другом и с BP (€18K/€36K держатся сквозь стадии).</span></div>
+      <div class="win"><span class="tick">✓</span><span><strong>Risks-секция сильнейшая прогона</strong> — 9 рисков с mitigation/contingency/triggers, полный SWOT, risk-матрица.</span></div>
+      <div class="win"><span class="tick">✓</span><span><strong>Честное раскрытие B4</strong> — BP прямо пишет «Payback 71 месяцев», «Negative early margin», не прячет слабость ранней экономики.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>Вывод</h2></div>
+    <p class="sec-desc">Что этот кейс меняет в понимании прогона в целом.</p>
+    <div class="callout">
+      <p><strong>Q4 — лучший overall-кейс всего прогона (~62%, «Удовлетворительно»).</strong> Enterprise-профиль и единственная валюта EUR на входе дали движку максимальную связность из всех четырёх кейсов: карточка не подменяет идею, BP держит мастер-слой инвестиций до евро и выдаёт первую по-настоящему здоровую unit-экономику, презентация несёт лучший нарратив прогона.</p>
+      <p>Ключевой backend-вывод: почти все дефекты кейса — <strong>рендер-слой</strong> (числовой форматтер: ×100 churn, ÷100 pricing, ×1000 cash-flow, знаковая инверсия forecast), плюс один структурный USD-узел в cash-flow/forecast и санитайзер шаблонов/leak. Логика расчётов и мастер-слой в основном корректны.</p>
+      <p><strong>Рекомендация:</strong> перепроверить «фантазийные числа» Q1–Q3 через ту же линзу — вероятно, часть из них тоже рендер-баги того же форматтера, а не независимые логические ошибки. Это фиксируемо в днях, а не архитектурная переработка.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  DreamBiz QA-kit · Полный прогон Q4 (Card → Business Plan → Presentation) · 2026-07-14 · Overall ≈62% «Удовлетворительно»<br>
+  Переключение темы — тумблер <span class="kbd">◐</span> в интерфейсе просмотра.
+</footer>

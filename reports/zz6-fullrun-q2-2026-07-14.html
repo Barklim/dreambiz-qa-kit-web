@@ -1,0 +1,368 @@
+<title>DreamBiz QA — Полный прогон Q2 (Карточка → BP → Презентация)</title>
+<style>
+  :root {
+    --bg:#f4f6f9; --surface:#ffffff; --surface-2:#eef1f6;
+    --ink:#16202e; --ink-2:#4a586b; --ink-3:#8695a8; --line:#dce2eb;
+    --accent:#3f4fd6; --accent-soft:#eaecfb;
+
+    --crit:#d13b3b; --crit-bg:#fbeaea; --high:#d1811f; --high-bg:#fbf1e2;
+    --med:#2f6fd1; --med-bg:#e7eefb; --low:#5a7d6b; --low-bg:#e9f1ec;
+
+    --v-exc:#1f9d63; --v-good:#6aa02a; --v-sat:#c99700; --v-weak:#d1811f; --v-unacc:#d13b3b;
+
+    /* regression status */
+    --st-fixed:#1f9d63; --st-fixed-bg:#e6f4ec;
+    --st-ok:#2f6fd1;    --st-ok-bg:#e7eefb;
+    --st-flaky:#c99700; --st-flaky-bg:#faf3dc;
+    --st-broke:#d13b3b; --st-broke-bg:#fbeaea;
+    --st-imp:#5a7d6b;   --st-imp-bg:#e9f1ec;
+
+    --radius:12px;
+    --shadow: 0 1px 2px rgba(22,32,46,.05), 0 4px 16px rgba(22,32,46,.06);
+    --maxw:1120px;
+    --sans:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono:ui-monospace, "SF Mono", "JetBrains Mono", "Menlo", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#0e131b; --surface:#161d28; --surface-2:#1d2633;
+      --ink:#e8edf4; --ink-2:#a7b4c5; --ink-3:#6d7c90; --line:#2a3543;
+      --accent:#8b97f5; --accent-soft:#232a45;
+      --crit:#f0736f; --crit-bg:#2e1a1c; --high:#e8a94e; --high-bg:#2c2317;
+      --med:#6ea3ef; --med-bg:#182333; --low:#82ab93; --low-bg:#172219;
+      --v-exc:#46c489; --v-good:#8fc74e; --v-sat:#e0b93a; --v-weak:#e8a94e; --v-unacc:#f0736f;
+      --st-fixed:#46c489; --st-fixed-bg:#132a1f; --st-ok:#6ea3ef; --st-ok-bg:#152131;
+      --st-flaky:#e0b93a; --st-flaky-bg:#2a2413; --st-broke:#f0736f; --st-broke-bg:#2e1a1c;
+      --st-imp:#82ab93; --st-imp-bg:#172219;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 20px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg:#f4f6f9; --surface:#ffffff; --surface-2:#eef1f6; --ink:#16202e; --ink-2:#4a586b; --ink-3:#8695a8; --line:#dce2eb;
+    --accent:#3f4fd6; --accent-soft:#eaecfb;
+    --crit:#d13b3b; --crit-bg:#fbeaea; --high:#d1811f; --high-bg:#fbf1e2; --med:#2f6fd1; --med-bg:#e7eefb; --low:#5a7d6b; --low-bg:#e9f1ec;
+    --v-exc:#1f9d63; --v-good:#6aa02a; --v-sat:#c99700; --v-weak:#d1811f; --v-unacc:#d13b3b;
+    --st-fixed:#1f9d63; --st-fixed-bg:#e6f4ec; --st-ok:#2f6fd1; --st-ok-bg:#e7eefb;
+    --st-flaky:#c99700; --st-flaky-bg:#faf3dc; --st-broke:#d13b3b; --st-broke-bg:#fbeaea; --st-imp:#5a7d6b; --st-imp-bg:#e9f1ec;
+    --shadow: 0 1px 2px rgba(22,32,46,.05), 0 4px 16px rgba(22,32,46,.06);
+  }
+  :root[data-theme="dark"] {
+    --bg:#0e131b; --surface:#161d28; --surface-2:#1d2633; --ink:#e8edf4; --ink-2:#a7b4c5; --ink-3:#6d7c90; --line:#2a3543;
+    --accent:#8b97f5; --accent-soft:#232a45;
+    --crit:#f0736f; --crit-bg:#2e1a1c; --high:#e8a94e; --high-bg:#2c2317; --med:#6ea3ef; --med-bg:#182333; --low:#82ab93; --low-bg:#172219;
+    --v-exc:#46c489; --v-good:#8fc74e; --v-sat:#e0b93a; --v-weak:#e8a94e; --v-unacc:#f0736f;
+    --st-fixed:#46c489; --st-fixed-bg:#132a1f; --st-ok:#6ea3ef; --st-ok-bg:#152131;
+    --st-flaky:#e0b93a; --st-flaky-bg:#2a2413; --st-broke:#f0736f; --st-broke-bg:#2e1a1c; --st-imp:#82ab93; --st-imp-bg:#172219;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 20px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+  a { color:var(--accent); }
+
+  /* header */
+  header { border-bottom:1px solid var(--line); background:linear-gradient(180deg, var(--surface), var(--bg)); }
+  .head-inner { padding:40px 0 30px; }
+  .eyebrow { font-family:var(--mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; }
+  h1 { font-size:clamp(27px,4vw,40px); line-height:1.08; margin:10px 0 8px; letter-spacing:-.02em; text-wrap:balance; font-weight:800; }
+  .sub { color:var(--ink-2); font-size:16px; max-width:64ch; }
+  .meta-row { display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:18px; font-size:13px; color:var(--ink-3); font-family:var(--mono); }
+  .meta-row b { color:var(--ink-2); font-weight:600; }
+
+  /* verdict banner */
+  .verdict-banner { margin-top:24px; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); overflow:hidden; display:grid; grid-template-columns:minmax(210px,250px) 1fr; }
+  @media (max-width:760px){ .verdict-banner{ grid-template-columns:1fr; } }
+  .vb-score { padding:26px 28px; display:flex; flex-direction:column; justify-content:center; gap:4px; border-right:1px solid var(--line); background:color-mix(in srgb, var(--v-sat) 9%, var(--surface)); }
+  @media (max-width:760px){ .vb-score{ border-right:0; border-bottom:1px solid var(--line); } }
+  .vb-score .big { font-family:var(--mono); font-size:52px; font-weight:700; line-height:1; color:var(--v-sat); font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+  .vb-score .label { font-size:13px; color:var(--ink-2); }
+  .vb-tag { align-self:flex-start; margin-top:8px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#fff; background:var(--v-sat); padding:3px 10px; border-radius:999px; }
+  .vb-text { padding:24px 28px; }
+  .vb-text p { margin:0 0 10px; color:var(--ink-2); font-size:15px; }
+  .vb-text p:last-child { margin-bottom:0; }
+  .vb-text strong { color:var(--ink); }
+
+  /* case score strip */
+  .scorestrip { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:16px; }
+  @media (max-width:760px){ .scorestrip{ grid-template-columns:repeat(2,1fr); } }
+  .ss-cell { border:1px solid var(--line); border-radius:10px; background:var(--surface); padding:14px 16px; box-shadow:var(--shadow); }
+  .ss-cell.avg { background:var(--accent-soft); border-color:color-mix(in srgb,var(--accent) 30%, var(--line)); }
+  .ss-q { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); }
+  .ss-num { font-family:var(--mono); font-size:30px; font-weight:700; line-height:1.05; margin-top:4px; font-variant-numeric:tabular-nums; }
+  .ss-desc { font-size:12px; color:var(--ink-2); margin-top:3px; }
+  .ss-cell.avg .ss-num { color:var(--accent); }
+
+  /* section scaffold */
+  section { padding:40px 0; border-bottom:1px solid var(--line); }
+  .sec-head { display:flex; align-items:baseline; gap:14px; margin-bottom:8px; }
+  .sec-num { font-family:var(--mono); font-size:13px; color:var(--accent); font-weight:700; letter-spacing:.05em; }
+  h2 { font-size:22px; margin:0; letter-spacing:-.01em; font-weight:750; }
+  .sec-desc { color:var(--ink-2); font-size:14px; margin:0 0 22px; max-width:74ch; }
+  h3 { font-size:16px; margin:26px 0 10px; letter-spacing:-.005em; }
+  p { font-size:15px; color:var(--ink-2); }
+  p strong, li strong { color:var(--ink); }
+
+  /* regression matrix */
+  .matrix-scroll { overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); background:var(--surface); }
+  table.matrix { border-collapse:collapse; width:100%; min-width:720px; font-size:13px; }
+  table.matrix th, table.matrix td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:middle; }
+  table.matrix thead th { position:sticky; top:0; background:var(--surface-2); font-size:12px; letter-spacing:.03em; color:var(--ink-2); font-weight:700; }
+  table.matrix thead th.q { font-family:var(--mono); text-align:center; width:132px; }
+  table.matrix tbody th { font-weight:600; color:var(--ink); width:230px; }
+  table.matrix td.q { text-align:center; }
+  table.matrix tbody tr:last-child td, table.matrix tbody tr:last-child th { border-bottom:0; }
+  table.matrix tbody tr:hover td, table.matrix tbody tr:hover th { background:color-mix(in srgb,var(--accent) 4%, transparent); }
+
+  .chip { display:inline-flex; align-items:center; gap:5px; font-family:var(--mono); font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; letter-spacing:.02em; white-space:nowrap; }
+  .chip.fixed { color:var(--st-fixed); background:var(--st-fixed-bg); }
+  .chip.ok    { color:var(--st-ok);    background:var(--st-ok-bg); }
+  .chip.flaky { color:var(--st-flaky); background:var(--st-flaky-bg); }
+  .chip.broke { color:var(--st-broke); background:var(--st-broke-bg); }
+  .chip.imp   { color:var(--st-imp);   background:var(--st-imp-bg); }
+  .chip.na    { color:var(--ink-3);    background:var(--surface-2); }
+  .cell-note { display:block; font-size:11px; color:var(--ink-3); margin-top:3px; font-family:var(--mono); text-align:center; }
+  .verdict-col { font-family:var(--mono); font-size:11px; font-weight:700; }
+
+  .legend { display:flex; flex-wrap:wrap; gap:8px 14px; margin-top:14px; font-size:12px; color:var(--ink-2); }
+  .legend .chip { font-size:10px; }
+
+  /* case cards */
+  .case { border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); margin-top:16px; overflow:hidden; }
+  .case-head { display:grid; grid-template-columns:64px 1fr auto; gap:16px; align-items:center; padding:18px 22px; border-bottom:1px solid var(--line); background:var(--surface-2); }
+  .case-score { font-family:var(--mono); font-size:30px; font-weight:700; line-height:1; text-align:center; font-variant-numeric:tabular-nums; }
+  .case-title { font-size:16px; font-weight:700; margin:0; }
+  .case-title span { display:block; font-weight:400; font-size:13px; color:var(--ink-2); margin-top:2px; }
+  .case-meta { font-family:var(--mono); font-size:11px; color:var(--ink-3); text-align:right; }
+  .verd { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:3px 9px; border-radius:999px; color:#fff; display:inline-block; }
+  .verd.good { background:var(--v-good); } .verd.sat { background:var(--v-sat); }
+  .case-body { padding:18px 22px; }
+  .case-body ul { margin:0; padding-left:0; list-style:none; display:flex; flex-direction:column; gap:9px; }
+  .case-body li { font-size:14px; color:var(--ink-2); padding-left:22px; position:relative; }
+  .case-body li::before { content:""; position:absolute; left:4px; top:8px; width:7px; height:7px; border-radius:2px; }
+  .case-body li.pos::before { background:var(--v-exc); }
+  .case-body li.neg::before { background:var(--crit); }
+  .case-body li.mid::before { background:var(--high); }
+  .mono { font-family:var(--mono); font-variant-numeric:tabular-nums; }
+
+  /* root cards */
+  .roots { display:flex; flex-direction:column; gap:16px; }
+  .root { border:1px solid var(--line); border-left:4px solid var(--crit); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); padding:20px 24px; }
+  .root.p2 { border-left-color:var(--high); }
+  .root.p3 { border-left-color:var(--med); }
+  .root-head { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .root-rank { font-family:var(--mono); font-size:12px; font-weight:700; color:#fff; background:var(--crit); padding:2px 9px; border-radius:6px; letter-spacing:.03em; }
+  .root.p2 .root-rank { background:var(--high); } .root.p3 .root-rank { background:var(--med); }
+  .root h3 { margin:0; font-size:16px; color:var(--ink); }
+  .root p { margin:12px 0 0; font-size:14px; }
+  .root .where { margin-top:12px; font-family:var(--mono); font-size:12px; color:var(--ink-2); background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
+  .root .where b { color:var(--accent); }
+
+  /* wins */
+  .wins { display:grid; grid-template-columns:repeat(2,1fr); gap:10px 20px; margin-top:6px; }
+  @media (max-width:640px){ .wins{ grid-template-columns:1fr; } }
+  .win { display:flex; gap:10px; align-items:flex-start; font-size:14px; color:var(--ink-2); }
+  .win .tick { color:var(--v-exc); font-weight:800; flex:none; }
+
+  /* callout */
+  .callout { border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:var(--radius); background:var(--accent-soft); padding:18px 22px; margin-top:20px; }
+  .callout p { margin:0; color:var(--ink); font-size:15px; }
+  .callout p + p { margin-top:8px; }
+
+  footer { padding:30px 0 60px; color:var(--ink-3); font-size:13px; font-family:var(--mono); }
+  .kbd { font-family:var(--mono); font-size:.92em; background:var(--surface-2); border:1px solid var(--line); border-radius:5px; padding:1px 6px; color:var(--ink-2); }
+
+  /* verd.good used for 72, verd.sat used for 52/53 already covered above */
+</style>
+
+<header>
+  <div class="wrap head-inner">
+    <div class="eyebrow">DreamBiz QA · Полный прогон · Q2</div>
+    <h1>Q2 — Meal subscription: полный прогон</h1>
+    <p class="sub">Multi-city Office Lunch Subscription — платформа подписки на офисные обеды в Бангкоке, Куала-Лумпуре и Джакарте, ежедневная доставка аутентичной локальной кухни с трекингом калорий/БЖУ, валюта THB. Прогон по трём стадиям артефакта подряд: Idea Card → Business Plan → Presentation — проверка, держится ли качество карточки вниз по пайплайну.</p>
+    <div class="meta-row">
+      <span><b>Дата:</b> 2026-07-14</span>
+      <span><b>Кейс:</b> Q2 · SEA / THB</span>
+      <span><b>Стадий:</b> 3</span>
+      <span><b>Артефакты:</b> карточка + BP + презентация</span>
+    </div>
+
+    <div class="verdict-banner">
+      <div class="vb-score">
+        <div class="big">53%</div>
+        <div class="label">Итоговый балл полного прогона</div>
+        <div class="vb-tag">Удовлетворительно</div>
+      </div>
+      <div class="vb-text">
+        <p><strong>Классический «обрыв качества» вниз по пайплайну.</strong> Карточка идеи держит идею, три города и THB чисто — <span class="mono">72%</span> («Хорошо»). Business Plan и презентация синхронно проседают до <span class="mono">52%</span> и <span class="mono">53%</span> («Удовлетворительно») из-за рендер-багов уровня узла, а не входных данных: цены делятся на 100 при выводе, cash-flow всплывает в USD вместо THB, в текст BP просочилось русское слово «Лидер».</p>
+        <p>Мультивалютность и мультигородность живут корректно в мастер-слое расчётов на всех трёх стадиях — их теряет именно рендер-слой при переходе card → BP → presentation.</p>
+      </div>
+    </div>
+
+    <div class="scorestrip">
+      <div class="ss-cell"><div class="ss-q">Карточка</div><div class="ss-num" style="color:var(--v-good)">72</div><div class="ss-desc">Идея, THB, 3 города — держит</div></div>
+      <div class="ss-cell"><div class="ss-q">BP</div><div class="ss-num" style="color:var(--v-sat)">52</div><div class="ss-desc">÷100 цены, USD cash-flow, рус-leak</div></div>
+      <div class="ss-cell"><div class="ss-q">Презентация</div><div class="ss-num" style="color:var(--v-sat)">53</div><div class="ss-desc">USD forecast, TAM/SAM/SOM разъезжается</div></div>
+      <div class="ss-cell avg"><div class="ss-q">Overall</div><div class="ss-num">53</div><div class="ss-desc">≈53% · Удовлетворительно</div></div>
+      <div class="ss-cell"><div class="ss-q">Паттерн</div><div class="ss-num" style="font-size:16px; color:var(--ink-2)">cliff ↓</div><div class="ss-desc">карточка → BP → през.</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Три стадии</h2></div>
+    <p class="sec-desc">Одна и та же идея, три последовательных артефакта одного прогона. Матрица показывает, что именно держится, а что теряется при переходе от карточки к бизнес-плану и презентации.</p>
+    <div class="matrix-scroll">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th>Аспект</th>
+            <th class="q">Карточка<br><span style="font-weight:400;color:var(--ink-3)">72%</span></th>
+            <th class="q">Business Plan<br><span style="font-weight:400;color:var(--ink-3)">52%</span></th>
+            <th class="q">Презентация<br><span style="font-weight:400;color:var(--ink-3)">53%</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>генерация</th>
+            <td class="q"><span class="chip fixed">✓ собралась</span></td>
+            <td class="q"><span class="chip fixed">✓ все 8 секций</span></td>
+            <td class="q"><span class="chip fixed">✓ собралась</span></td>
+          </tr>
+          <tr>
+            <th>валюта</th>
+            <td class="q"><span class="chip fixed">THB чисто</span></td>
+            <td class="q"><span class="chip broke">USD cash-flow + ÷100 pricing</span></td>
+            <td class="q"><span class="chip broke">USD forecast</span></td>
+          </tr>
+          <tr>
+            <th>утечка иностранного языка</th>
+            <td class="q"><span class="chip ok">не найдено</span></td>
+            <td class="q"><span class="chip broke">рус. «Лидер»</span></td>
+            <td class="q"><span class="chip ok">не найдено</span></td>
+          </tr>
+          <tr>
+            <th>числовая согласованность</th>
+            <td class="q"><span class="chip flaky">required 7M vs peak 16.3M (2.3×)</span></td>
+            <td class="q"><span class="chip broke">тарифы ÷100</span></td>
+            <td class="q"><span class="chip broke">TAM/SAM/SOM ≠ BP</span></td>
+          </tr>
+          <tr>
+            <th>мультивалюта / мультигород</th>
+            <td class="q"><span class="chip fixed">3 города держатся</span></td>
+            <td class="q"><span class="chip flaky">мастер-слой ОК, рендер теряет</span></td>
+            <td class="q"><span class="chip flaky">мастер-слой ОК, рендер теряет</span></td>
+          </tr>
+          <tr>
+            <th>идея не подменена</th>
+            <td class="q"><span class="chip fixed">✓</span></td>
+            <td class="q"><span class="chip fixed">✓</span></td>
+            <td class="q"><span class="chip fixed">✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span class="chip fixed">держится / ОК</span>
+      <span class="chip ok">корректно</span>
+      <span class="chip flaky">частично / погранично</span>
+      <span class="chip broke">сломано</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Разбор по стадиям</h2></div>
+    <p class="sec-desc">Балл, вердикт и ключевые находки каждого артефакта в рамках одного сквозного прогона Q2.</p>
+
+    <div class="case">
+      <div class="case-head">
+        <div class="case-score" style="color:var(--v-good)">72</div>
+        <div><p class="case-title">Idea Card — Multi-city Office Lunch Subscription<span>Meal subscription · Бангкок / KL / Джакарта · THB</span></p></div>
+        <div class="case-meta"><span class="verd good">Хорошо</span><br>≈72% · lvl good</div>
+      </div>
+      <div class="case-body">
+        <ul>
+          <li class="pos"><strong>Идея не подменена</strong> — движок сохранил именно meal-subscription-концепцию, не свернул к обобщённой доставке еды.</li>
+          <li class="pos"><strong>Три города удержаны</strong> одновременно (Бангкок / Куала-Лумпур / Джакарта), модель подписки обработана корректно, валюта THB чистая во всех блоках карточки.</li>
+          <li class="neg"><strong>Required <span class="mono">฿7M</span> vs peak capital draw <span class="mono">฿16.3M</span></strong> — разрыв 2.3× (баг B4, движок систематически недооценивает требуемый капитал).</li>
+          <li class="mid"><strong>LTV:CAC на грани реалистичности</strong>, экономика в целом смещена в оптимистичную сторону.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="case-head">
+        <div class="case-score" style="color:var(--v-sat)">52</div>
+        <div><p class="case-title">Business Plan<span>8/8 секций сгенерировано · Бангкок / KL / Джакарта · THB (мастер) → USD/÷100 (рендер)</span></p></div>
+        <div class="case-meta"><span class="verd sat">Удовл.</span><br>≈52% · lvl sat</div>
+      </div>
+      <div class="case-body">
+        <ul>
+          <li class="neg"><strong>Ценовые тарифы рендерятся ÷100</strong>: вместо <span class="mono">฿18,000</span> на экране <span class="mono">฿180</span> — баг форматтера чисел, не проблема входных данных.</li>
+          <li class="neg"><strong>Русское слово «Лидер» просочилось в текст</strong> — утечка иностранного языка / шаблона (баг B7) в англо/тайском контексте документа.</li>
+          <li class="neg"><strong>Таблица cash-flow в USD, а не в THB</strong> — структурный узел с USD-дефолтом, хотя весь остальной документ в THB.</li>
+          <li class="pos"><strong>Рынок и персоны проработаны лучше, чем в Q1</strong>; мультивалютность и мультигород держатся на уровне мастер-слоя расчётов, теряются только при рендере в конкретные секции.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="case-head">
+        <div class="case-score" style="color:var(--v-sat)">53</div>
+        <div><p class="case-title">Presentation<span>Питч-дек · нарратив сильнее числовых слайдов</span></p></div>
+        <div class="case-meta"><span class="verd sat">Удовл.</span><br>≈53% · lvl sat</div>
+      </div>
+      <div class="case-body">
+        <ul>
+          <li class="pos"><strong>Нарративные слайды solid</strong> — история, позиционирование и логика подачи идеи держатся на уровне карточки.</li>
+          <li class="neg"><strong>Forecast-таблица в USD</strong>, тот же структурный USD-узел, что и в BP cash-flow.</li>
+          <li class="neg"><strong>TAM/SAM/SOM не согласован с цифрами BP</strong> — та же категория рассинхрона чисел между стадиями/секциями.</li>
+          <li class="mid"><strong>Числовые слайды заметно слабее нарративных</strong> — тот же обрыв качества, что и между карточкой и BP, воспроизводится внутри самой презентации.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Корни</h2></div>
+    <p class="sec-desc">Три находки полного прогона сводятся к дефектам рендер-слоя, не к качеству входных данных или мастер-расчётов — все они узло-локальны и воспроизводимы независимо от конкретного кейса.</p>
+    <div class="roots">
+
+      <div class="root">
+        <div class="root-head"><span class="root-rank">Приоритет 1</span><h3>Number-formatter делит цены на 100 при рендере BP</h3></div>
+        <p>Тарифы подписки выводятся в бизнес-плане с ошибкой на два порядка: <span class="mono">฿18,000</span> в мастер-данных превращается в <span class="mono">฿180</span> на экране. Мастер-слой расчётов держит верное число — искажение происходит строго в узле форматирования вывода секции pricing, что делает баг детерминированным и легко воспроизводимым отдельно от логики самой генерации.</p>
+        <div class="where"><b>Фикс:</b> найти узел форматирования цен в рендере секции pricing BP, проверить на off-by-two-orders (вероятно, повторное применение деления на 100 — например, если апстрим уже хранит значение в «единицах», а форматтер интерпретирует его как «центы»).</div>
+      </div>
+
+      <div class="root p2">
+        <div class="root-head"><span class="root-rank">Приоритет 2</span><h3>Cash-flow / forecast узел зашит на USD по умолчанию</h3></div>
+        <p>И таблица cash-flow в Business Plan, и forecast-таблица в презентации выводятся в USD, хотя весь остальной документ — включая мастер-данные — корректно в THB. Это конкретный узел рендера с валютой по умолчанию, не считающей текущий контекст кейса; воспроизводится идентично на двух разных стадиях (BP и презентация), что указывает на общий переиспользуемый компонент/шаблон.</p>
+        <div class="where"><b>Где искать:</b> общий компонент рендера финансовых таблиц (cash-flow / forecast), используемый и в BP, и в презентации — вероятно, единая точка кода с хардкод-USD или дефолтом валюты, не привязанным к <span class="mono">case.currency</span>.</div>
+      </div>
+
+      <div class="root p3">
+        <div class="root-head"><span class="root-rank">Приоритет 3</span><h3>Утечка иностранного языка / шаблона в текст BP</h3></div>
+        <p>Русское слово «Лидер» появилось в англоязычном/тайском контексте Business Plan — классическая утечка шаблона или неотфильтрованного промежуточного текста (баг B7), аналогичная ранее замеченным утечкам research-артефактов в других разделах. Единичный случай в этом прогоне, но того же класса, что и предыдущие утечки языка/форматирования между стадиями.</p>
+        <div class="where"><b>Фикс:</b> проверить шаблоны/промпты секции, где встретилось слово «Лидер», на жёстко прописанные нерусифицированные строки или case-инвариантные placeholder'ы, которые должны были подставиться на языке кейса.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>Вывод</h2></div>
+    <p class="sec-desc">Что это значит для приоритизации фиксов на этом прогоне.</p>
+    <div class="callout">
+      <p><strong>Карточка держит идею хорошо</strong> — три города, THB, модель подписки, сама идея meal-subscription не подменяется движком. Это подтверждает, что базовый слой генерации и мастер-расчётов работает корректно и для этого архетипа (физическая логистика + подписка + мультивалюта/мультигород).</p>
+      <p>Итоговый балл прогона <strong>~53%</strong> ограничен не входом и не мастер-данными, а тремя рендер-багами вниз по пайплайну: <span class="mono">÷100</span> в ценах BP, <span class="mono">USD</span>-узел в cash-flow/forecast и разовая утечка русского слова. Все три — узло-локальные дефекты рендер-слоя, а значит потенциально <strong>чинибельны точечно</strong>, без пересмотра логики генерации карточки или мастер-расчётов.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  DreamBiz QA-kit · Полный прогон Q2 (Idea Card → Business Plan → Presentation) · 2026-07-14 · 3/3 стадии сгенерированы<br>
+  Переключение темы — тумблер <span class="kbd">◐</span> в интерфейсе просмотра.
+</footer>
